@@ -1,0 +1,47 @@
+[project]
+name = "generate-article-figure"
+version = "0.1.0"
+description = "Bio/Chem publication-figure AI agent (text-to-figure)"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "google-genai>=1.0",
+    "python-dotenv>=1.0",
+    "httpx>=0.27",
+    "structlog>=24.4",
+    "python-pptx>=1.0,<2.0",
+    "Pillow>=10.4",
+    "gradio>=5.0,<6.0",
+    "rdkit>=2024.0",
+    "PubChemPy>=1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=6.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]
