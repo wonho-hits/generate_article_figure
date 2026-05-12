@@ -93,6 +93,58 @@ class GeminiClient:
                 ) from exc
         return response.text or ""
 
+    async def generate_text_with_image(
+        self,
+        prompt: str,
+        image: bytes,
+        *,
+        image_mime: str,
+        system: str | None = None,
+        response_schema: Type[T] | None = None,
+        model: str | None = None,
+    ) -> str | T:
+        """Generate text grounded in an image (vision input).
+
+        Used by the layout critic to audit a rendered SVG. Gemini 2.5+ text
+        models are multimodal and accept image parts alongside text.
+        """
+        config_kwargs: dict = {}
+        if system is not None:
+            config_kwargs["system_instruction"] = system
+        if response_schema is not None:
+            config_kwargs["response_mime_type"] = "application/json"
+            config_kwargs["response_schema"] = response_schema
+        config = types.GenerateContentConfig(**config_kwargs) if config_kwargs else None
+
+        parts = [
+            types.Part.from_bytes(data=image, mime_type=image_mime),
+            prompt,
+        ]
+        response = await self._call_with_retry(
+            model=model or self._text_model,
+            contents=parts,
+            config=config,
+        )
+        self._log_usage(response, kind="text_vision")
+
+        if response_schema is not None:
+            parsed = getattr(response, "parsed", None)
+            if parsed is not None:
+                return parsed  # type: ignore[return-value]
+            text = response.text or ""
+            if not text:
+                raise GeminiResponseError(
+                    "vision call: schema requested but no parsed object and no text"
+                )
+            try:
+                return response_schema.model_validate_json(text)
+            except Exception as exc:
+                raise GeminiResponseError(
+                    f"vision call: failed to parse JSON into "
+                    f"{response_schema.__name__}: {exc}"
+                ) from exc
+        return response.text or ""
+
     async def generate_image(self, prompt: str, *, model: str | None = None) -> bytes:
         """Generate image, return raw image bytes. Format chosen by the model
         (typically JPEG on gemini-3.1-flash-image-preview)."""

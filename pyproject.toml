@@ -18,6 +18,7 @@ dependencies = [
     "gradio>=5.0,<6.0",
     "rdkit>=2024.0",
     "PubChemPy>=1.0",
+    "cairosvg>=2.7",
 ]
 
 [dependency-groups]

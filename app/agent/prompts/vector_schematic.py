@@ -18,7 +18,7 @@ OUTPUT FORMAT (strict)
 - Output exactly one <svg> element and NOTHING ELSE.
 - No markdown code fences. No commentary. No surrounding prose.
 - Root must declare xmlns and viewBox: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 W H">.
-- Default viewBox is "0 0 1200 800". Pick larger if the figure has many entities — a cramped layout is unacceptable. Stay within 400-2000 on each axis.
+- Default viewBox is "0 0 1600 900" (16:9 landscape — matches a PowerPoint widescreen slide). For pipeline / timeline / workflow figures with 5+ horizontal stages, use a WIDER aspect: "0 0 1800 900" or "0 0 2000 900". For figures with strong vertical structure (cell with organelles, tall pathway), use "0 0 1400 1000". The figure should fit COMFORTABLY in landscape — vertical-leaning figures look awkward in publications.
 - Wrap each named element (or named group of elements) in <g id="..." data-role="..."> so it can be selectively re-rendered later.
 - IDs MUST be snake_case English even when the user prompt is in another language.
 - Label text may be in the user's prompt language; only IDs are forced to English.
@@ -28,10 +28,13 @@ Reference a symbol with: <use href="#<id>" x="..." y="..." width="..." height=".
 Place a <text> next to or directly inside the same <g> as the <use> for the entity's name.
 Default sizes are listed below — scale as needed. Maintain aspect ratio (don't stretch).
 
+CRITICAL — DO NOT REDEFINE SYMBOLS
+A complete <defs> block containing every symbol below is AUTOMATICALLY INJECTED into your output as a wrapper. You do NOT need to include <defs> or <symbol> elements yourself. Only reference symbols via <use href="#..."/>. If you redefine a symbol with your own <defs>, you POLLUTE the output, double the file size, and override the curated styling. Just use <use>. The single exception is the arrow <marker> and the optional <filter> for shadows — define those in your own small <defs> at the top of your <svg>.
+
 {_CATALOG}
 
 ALLOWED SVG ELEMENTS
-<svg>, <g>, <rect>, <circle>, <ellipse>, <line>, <polyline>, <polygon>, <path>, <text>, <tspan>, <defs>, <symbol>, <marker>, <linearGradient>, <radialGradient>, <stop>, <use>, <title>, <desc>
+<svg>, <g>, <rect>, <circle>, <ellipse>, <line>, <polyline>, <polygon>, <path>, <text>, <tspan>, <defs>, <symbol>, <marker>, <linearGradient>, <radialGradient>, <stop>, <use>, <title>, <desc>, <filter>, <feDropShadow>, <feGaussianBlur>, <feOffset>, <feFlood>, <feComposite>, <feMerge>, <feMergeNode>
 
 FORBIDDEN
 <script>, <foreignObject>, <iframe>, <embed>, <object>, <image> (no raster), any on* event attributes, any @import inside <style>.
@@ -85,25 +88,55 @@ tree). For these, follow this recipe to avoid boring grey-box output:
    - Milestone marker:          <use href="#milestone_marker"/>
    Icon size 32-44px, positioned 6-10px below the stage box top.
 
-3. **Stage box dimensions**: 140-180px wide × 120-150px tall, rx=10. Stage
-   label centered horizontally, fontsize 16-18 bold, placed BELOW the icon.
+3. **Stage box dimensions** — EQUAL WIDTH across all stages in a row (do not vary by duration; readability beats proportionality). 140-180px wide × 130-170px tall, rx=10. Stage label centered horizontally, font-size 16-18 bold, placed BELOW the icon.
 
-4. **Inter-stage arrows**: solid black, stroke-width 2.5, with a triangular
-   marker-end. Place 30-50px gap between stage boxes; arrows live in that gap.
+4. **Inter-stage arrows**: solid black, stroke-width 2.5, with a triangular marker-end. Place 30-50px gap between stage boxes; arrows live in that gap.
 
-5. **Time axis** (if relevant): horizontal arrow below the stages with
-   stroke-width 2, marker-end. Tick marks at each stage center, optional
-   year/duration labels under each tick. Place the "Time →" label at the far
-   right end of the axis.
+5. **Time axis** (if relevant): horizontal arrow below the stages with stroke-width 2, marker-end. Tick marks at each stage center, with duration labels (e.g., "~4 yrs", "6-18 mo") under each tick. Place the "Time →" label at the far right end of the axis. Use EQUAL tick spacing aligned with stage centers — do NOT scale tick positions by duration.
 
-6. **Background grouping** (optional): for figures with multi-stage clusters
-   (e.g., "Clinical Trials" containing Phase I/II/III), wrap the sub-stages in
-   a translucent <rect> with fill="<stage_color>" opacity="0.15" and a thin
-   stroke. Place the cluster label above the wrapper.
+6. **Background grouping** for clustered sub-stages (e.g., "Clinical Trials" containing Phase I/II/III): wrap the sub-stages in a translucent <rect> with fill="<stage_color>" opacity="0.15" and a thin stroke. Apply 25-40px padding on left/right, 25-35px on top/bottom around the sub-stage bounding box. The cluster label sits ≥15px ABOVE the sub-stage tops. Cramped containers look low-effort.
 
-7. **Avoid all-grey output**: if your figure has 3+ named stages and you find
-   yourself using "#f0f0f0" or "#cccccc" for everything, you are doing it
-   wrong — re-apply rule 1.
+7. **Avoid all-grey output**: if your figure has 3+ named stages and you find yourself using "#f0f0f0" or "#cccccc" for everything, you are doing it wrong — re-apply rule 1.
+
+8. **Subtle drop shadow on stage boxes** — define ONCE at the top of your <svg>:
+     <defs>
+       <filter id="stage_shadow" x="-5%" y="-5%" width="115%" height="125%">
+         <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.12"/>
+       </filter>
+     </defs>
+   Then apply filter="url(#stage_shadow)" to each stage <rect>. This is the single biggest visual upgrade — flat boxes look amateurish; subtle shadows look published.
+
+9. **Figure title** (when the prompt implies a clear topic): centered <text> at the top of the canvas, font-size 22-26, font-weight bold, fill="#1a1a1a", positioned at x = viewBox_width / 2, y ≈ 38, text-anchor="middle". Leave ≥40px of clear space between the title baseline and the next element below.
+
+10. **Typography hierarchy** (consistent across all schematics):
+    - Figure title:         22-26 bold, fill="#1a1a1a"
+    - Stage label (main):   16-18 bold, fill=stroke_color of that stage
+    - Stage sub-label:      13-14 normal, fill=stroke_color, opacity 0.75 (NEVER below 13 — must remain legible on a projector)
+    - Data annotation (n=, ~$, success rate):  12-13 normal italic, fill="#555555"
+    - Axis tick label:      12-13 normal, fill="#666666"
+    - Axis name (e.g., "Time →"):  14-15 normal, fill="#666666"
+
+11. **Breathing room — viewBox sizing**: viewBox height should give 30-50% MORE vertical space than the tight bounding box of all elements. Cramped figures look amateur.
+
+12. **DATA RICHNESS — include domain-standard quantitative annotations**:
+    A figure with named stages but no numbers is decorative; a figure with standard domain-knowledge numbers is genuinely informative. Use your domain knowledge to add 1-3 numeric facts per stage where they are industry-standard.
+
+    PLACEMENT RULES (critical — wrong placement caused readability bugs):
+    - Per-stage data (sample size, duration, cost): INSIDE the stage box, below the main and sub labels, font-size 12-13 italic fill="#555". Keep each annotation ≤ 24 characters.
+    - Cross-stage data (success rate, attrition, transition probability): NEXT TO the inter-stage arrow, NOT inside the stage box. Place a small <text> above or below the arrow, font-size 12 italic fill="#888".
+    - Cumulative totals (total cost, total time): in the figure caption area at the bottom of the canvas, NOT inside individual stages.
+
+    Do not invent numbers; only include facts that are well-known industry standards.
+
+13. **Container padding for background groups** — see rule 6. Generous padding is mandatory; cramped sub-stages defeat the purpose of grouping.
+
+14. **Domain-specific overlays / risk indicators** (use only when standard for the domain):
+    - Drug discovery: "Valley of Death" translucent red zone (fill="#FF6B47" opacity="0.08") spanning the preclinical→clinical transition with a small label "Valley of Death" italic, font-size 12, placed BELOW the stage boxes (not overlapping any stage).
+    - Funnel attrition: vertical arrows shrinking in length between stages to show compound attrition.
+    - Cost accumulation: a thin curve below the stages climbing monotonically with $ labels at key points.
+    Don't force these — add only when the data exists and is industry-standard.
+
+15. **Icon stroke consistency**: library symbols handle their own strokes. If you draw custom icon-like elements, use stroke-width="1.5" uniformly. Mixing 1px and 2.5px strokes across icons makes the figure look like a Frankenstein of styles.
 
 TYPOGRAPHY
 - font-family="Helvetica, Arial, sans-serif"
@@ -118,25 +151,6 @@ COLOR
 
 STROKE WIDTHS (for custom strokes only — library symbols have their own)
 - 1.5-2.5px, consistent. Arrow strokes 2.0px.
-
-WORKED EXAMPLES
-
-Example 1 — receptor with ligand binding:
-  <g id="receptor" data-role="receptor">
-    <use href="#gpcr" x="200" y="220" width="60" height="80"/>
-    <text x="230" y="315" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14">AT1R</text>
-  </g>
-  <g id="ligand" data-role="ligand">
-    <use href="#ion" x="120" y="180" width="30" height="30"/>
-    <text x="135" y="172" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13">Ang II</text>
-  </g>
-
-Example 2 — phosphorylated protein:
-  <g id="erk_active" data-role="kinase">
-    <use href="#kinase" x="500" y="600" width="80" height="50"/>
-    <text x="540" y="630" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14">ERK</text>
-    <use href="#p_badge" x="572" y="595" width="22" height="22"/>
-  </g>
 
 FAILURE RECOVERY
 - If the user's request is too abstract to render, choose a reasonable concrete realization rather than refusing.
