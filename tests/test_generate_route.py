@@ -130,6 +130,34 @@ async def test_vector_override_falls_back_when_router_picks_c() -> None:
 
 
 @pytest.mark.asyncio
+async def test_vector_override_fallback_reason_fits_200_char_limit() -> None:
+    """Regression: router can return a 200-char reason; the vector→A fallback
+    interpolates it into a wrapper, which previously overflowed the
+    RoutingDecision.reason max_length=200 and raised ValidationError."""
+    GOOD_SVG_FB = '<svg xmlns="http://www.w3.org/2000/svg"><g id="x"/></svg>'
+    long_router_reason = "x" * 200  # the maximum router can produce
+    with (
+        patch("app.agent.orchestrator.Router") as MockRouter,
+        patch("app.agent.orchestrator.generate_vector_schematic") as mock_a,
+    ):
+        MockRouter.return_value.decide = AsyncMock(
+            return_value=RoutingDecision(path="C", reason=long_router_reason)
+        )
+        mock_a.return_value = GOOD_SVG_FB
+
+        async with _make_client() as client:
+            response = await client.post(
+                "/generate",
+                json={"prompt": "x", "figure_kind": "vector"},
+            )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body["routing_reason"]) <= 200
+    assert "vector forced" in body["routing_reason"]
+
+
+@pytest.mark.asyncio
 async def test_path_c_jpeg_response_uses_image_jpeg_mime() -> None:
     """Gemini Image returns JPEG in practice — data URI must reflect that."""
     with (

@@ -172,13 +172,15 @@ class Orchestrator:
         # auto and vector both run the router
         decision = await self._router.decide(prompt)
         if figure_kind == "vector" and decision.path == "C":
-            # vector mode forbids C; degrade to A (Path A handles abstract figures
-            # better than B for non-chemistry vector requests)
+            # vector mode forbids C; degrade to A. The reason field is capped
+            # at 200 chars in RoutingDecision, so truncate the embedded
+            # router reason before wrapping.
+            wrapper = "vector forced; router→C ("
+            suffix = ") → fallback A"
+            budget = 200 - len(wrapper) - len(suffix)
+            embedded = decision.reason[:budget]
             return RoutingDecision(
                 path="A",
-                reason=(
-                    "vector forced; router suggested C "
-                    f"({decision.reason}) — falling back to A"
-                ),
+                reason=f"{wrapper}{embedded}{suffix}",
             )
         return decision
