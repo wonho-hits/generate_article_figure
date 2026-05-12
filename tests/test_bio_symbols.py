@@ -35,7 +35,7 @@ def test_catalog_entries_are_well_formed() -> None:
         assert e.name
         assert e.category in {
             "receptor", "enzyme", "small_molecule",
-            "modification", "organelle", "structural",
+            "modification", "organelle", "structural", "general",
         }
         assert e.use_when
         assert e.default_w > 0 and e.default_h > 0

@@ -219,6 +219,86 @@ _STRUCTURAL: dict[str, str] = {
 }
 
 
+_GENERAL: dict[str, str] = {
+    "microscope": """<symbol id="microscope" viewBox="0 0 40 60" overflow="visible">
+        <rect x="6" y="50" width="28" height="6" rx="2" fill="#5A6B7F" stroke="#2A3F55" stroke-width="1.5"/>
+        <rect x="16" y="22" width="8" height="30" fill="#5A6B7F" stroke="#2A3F55" stroke-width="1.5"/>
+        <rect x="10" y="42" width="20" height="3" fill="#2A3F55"/>
+        <rect x="17" y="36" width="6" height="6" fill="#A8C5E2" stroke="#2A3F55" stroke-width="1.5"/>
+        <line x1="20" y1="22" x2="14" y2="10" stroke="#2A3F55" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="14" cy="10" r="3.5" fill="#A8C5E2" stroke="#2A3F55" stroke-width="1.5"/>
+    </symbol>""",
+    "lab_flask": """<symbol id="lab_flask" viewBox="0 0 40 50" overflow="visible">
+        <rect x="17" y="5" width="6" height="10" fill="#E5E5E5" stroke="#4A7A3F" stroke-width="1.5"/>
+        <path d="M 17 15 L 6 42 Q 20 50 34 42 L 23 15 Z"
+              fill="#B5D4A8" stroke="#4A7A3F" stroke-width="1.5"/>
+        <line x1="11" y1="35" x2="29" y2="35" stroke="#4A7A3F" stroke-width="1" stroke-dasharray="2,2"/>
+        <circle cx="14" cy="40" r="1.5" fill="#4A7A3F" opacity="0.5"/>
+        <circle cx="22" cy="38" r="1.2" fill="#4A7A3F" opacity="0.5"/>
+    </symbol>""",
+    "pill_capsule": """<symbol id="pill_capsule" viewBox="0 0 60 25" overflow="visible">
+        <path d="M 30 5 L 11 5 Q 3 5 3 12.5 Q 3 20 11 20 L 30 20 Z"
+              fill="#FFE0B0" stroke="#9C5F2A" stroke-width="1.5"/>
+        <path d="M 30 5 L 49 5 Q 57 5 57 12.5 Q 57 20 49 20 L 30 20 Z"
+              fill="#FFB570" stroke="#9C5F2A" stroke-width="1.5"/>
+    </symbol>""",
+    "patient_silhouette": """<symbol id="patient_silhouette" viewBox="0 0 40 55" overflow="visible">
+        <circle cx="20" cy="14" r="9" fill="#E8C5B5" stroke="#9C5F47" stroke-width="1.5"/>
+        <path d="M 5 50 L 8 32 Q 12 25 20 25 Q 28 25 32 32 L 35 50 Z"
+              fill="#E8C5B5" stroke="#9C5F47" stroke-width="1.5"/>
+    </symbol>""",
+    "document_stamp": """<symbol id="document_stamp" viewBox="0 0 45 50" overflow="visible">
+        <path d="M 5 5 L 32 5 L 40 13 L 40 45 L 5 45 Z"
+              fill="#FFFFFF" stroke="#444444" stroke-width="1.5"/>
+        <path d="M 32 5 L 32 13 L 40 13 Z" fill="#DDDDDD" stroke="#444444" stroke-width="1.5"/>
+        <line x1="10" y1="20" x2="35" y2="20" stroke="#888888" stroke-width="1"/>
+        <line x1="10" y1="25" x2="35" y2="25" stroke="#888888" stroke-width="1"/>
+        <line x1="10" y1="30" x2="30" y2="30" stroke="#888888" stroke-width="1"/>
+        <circle cx="32" cy="38" r="7" fill="none" stroke="#D03020" stroke-width="2"/>
+        <path d="M 28 38 L 31 41 L 36 35" fill="none" stroke="#D03020" stroke-width="2" stroke-linecap="round"/>
+    </symbol>""",
+    "chart_graph": """<symbol id="chart_graph" viewBox="0 0 50 40" overflow="visible">
+        <line x1="6" y1="5" x2="6" y2="35" stroke="#444444" stroke-width="1.5"/>
+        <line x1="6" y1="35" x2="46" y2="35" stroke="#444444" stroke-width="1.5"/>
+        <rect x="10" y="25" width="6" height="10" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="1"/>
+        <rect x="20" y="18" width="6" height="17" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="1"/>
+        <rect x="30" y="12" width="6" height="23" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="1"/>
+        <rect x="40" y="8" width="6" height="27" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="1"/>
+        <path d="M 13 23 L 23 16 L 33 10 L 43 6" fill="none" stroke="#D03020" stroke-width="1.5"/>
+    </symbol>""",
+    "milestone_marker": """<symbol id="milestone_marker" viewBox="0 0 30 40" overflow="visible">
+        <line x1="6" y1="5" x2="6" y2="38" stroke="#444444" stroke-width="2"/>
+        <ellipse cx="6" cy="38" rx="4" ry="1.5" fill="#444444"/>
+        <path d="M 6 6 L 26 11 L 6 16 Z" fill="#FF8847" stroke="#9C4A20" stroke-width="1.5"/>
+    </symbol>""",
+    "gear": """<symbol id="gear" viewBox="0 0 40 40" overflow="visible">
+        <g fill="#D4D4D4" stroke="#666666" stroke-width="1.5">
+            <rect x="18" y="2" width="4" height="6"/>
+            <rect x="18" y="32" width="4" height="6"/>
+            <rect x="2" y="18" width="6" height="4"/>
+            <rect x="32" y="18" width="6" height="4"/>
+        </g>
+        <circle cx="20" cy="20" r="11" fill="#D4D4D4" stroke="#666666" stroke-width="1.5"/>
+        <circle cx="20" cy="20" r="4" fill="#FFFFFF" stroke="#666666" stroke-width="1.5"/>
+    </symbol>""",
+    "clock": """<symbol id="clock" viewBox="0 0 40 40" overflow="visible">
+        <circle cx="20" cy="20" r="17" fill="#F5F5F5" stroke="#444444" stroke-width="2"/>
+        <line x1="20" y1="5" x2="20" y2="9" stroke="#444444" stroke-width="1.5"/>
+        <line x1="35" y1="20" x2="31" y2="20" stroke="#444444" stroke-width="1.5"/>
+        <line x1="20" y1="35" x2="20" y2="31" stroke="#444444" stroke-width="1.5"/>
+        <line x1="5" y1="20" x2="9" y2="20" stroke="#444444" stroke-width="1.5"/>
+        <line x1="20" y1="20" x2="20" y2="11" stroke="#222222" stroke-width="2" stroke-linecap="round"/>
+        <line x1="20" y1="20" x2="27" y2="20" stroke="#222222" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="20" cy="20" r="1.5" fill="#222222"/>
+    </symbol>""",
+    "magnifying_glass": """<symbol id="magnifying_glass" viewBox="0 0 40 40" overflow="visible">
+        <circle cx="16" cy="16" r="11" fill="#FFFFFF" stroke="#3A5F7F" stroke-width="2.5"/>
+        <circle cx="16" cy="16" r="9" fill="#A8C5E2" opacity="0.3"/>
+        <line x1="24" y1="24" x2="36" y2="36" stroke="#3A5F7F" stroke-width="3" stroke-linecap="round"/>
+    </symbol>""",
+}
+
+
 SYMBOLS: dict[str, str] = {
     **_RECEPTORS,
     **_ENZYMES,
@@ -226,6 +306,7 @@ SYMBOLS: dict[str, str] = {
     **_MODIFICATIONS,
     **_ORGANELLES,
     **_STRUCTURAL,
+    **_GENERAL,
 }
 
 
@@ -305,6 +386,37 @@ CATALOG: list[SymbolEntry] = [
     SymbolEntry("lipid_bilayer", "Lipid bilayer", "structural",
                 "Tileable membrane fragment. Use multiple <use> with adjacent x-positions to build a long membrane.",
                 100, 24),
+    # General schematic — useful for abstract pipelines, workflows, frameworks
+    SymbolEntry("microscope", "Microscope", "general",
+                "Research / discovery / basic-science stage. Place inside Discovery / Research stage boxes.",
+                40, 60),
+    SymbolEntry("lab_flask", "Lab flask", "general",
+                "Lab work / preclinical / wet-bench stage. Erlenmeyer flask with liquid.",
+                40, 50),
+    SymbolEntry("pill_capsule", "Pill / drug capsule", "general",
+                "Pharmaceutical / drug / therapeutic. Capsule shape, two-tone.",
+                60, 25),
+    SymbolEntry("patient_silhouette", "Patient / human subject", "general",
+                "Clinical trial / human-subject / patient stage. Head + shoulders silhouette.",
+                40, 55),
+    SymbolEntry("document_stamp", "Approved document", "general",
+                "Regulatory approval / FDA / paperwork stage. Document with red checkmark stamp.",
+                45, 50),
+    SymbolEntry("chart_graph", "Chart / analytics", "general",
+                "Analytics / surveillance / data-monitoring stage. Bar chart with trend line.",
+                50, 40),
+    SymbolEntry("milestone_marker", "Milestone flag", "general",
+                "Timeline waypoint / milestone. Orange flag on pole.",
+                30, 40),
+    SymbolEntry("gear", "Gear / process", "general",
+                "Process / mechanism / operations. Mechanical gear.",
+                40, 40),
+    SymbolEntry("clock", "Clock / time", "general",
+                "Time / duration / scheduling.",
+                40, 40),
+    SymbolEntry("magnifying_glass", "Magnifying glass / analysis", "general",
+                "Analysis / inspection / discovery. Lens with handle.",
+                40, 40),
 ]
 
 
@@ -319,7 +431,10 @@ def build_catalog_for_prompt() -> str:
     for entry in CATALOG:
         by_cat.setdefault(entry.category, []).append(entry)
 
-    order = ["receptor", "enzyme", "small_molecule", "modification", "organelle", "structural"]
+    order = [
+        "receptor", "enzyme", "small_molecule", "modification",
+        "organelle", "structural", "general",
+    ]
     titles = {
         "receptor": "Receptors / membrane proteins",
         "enzyme": "Cytosolic enzymes / proteins",
@@ -327,6 +442,7 @@ def build_catalog_for_prompt() -> str:
         "modification": "Post-translational modifications",
         "organelle": "Organelles",
         "structural": "Structural elements",
+        "general": "General schematic (workflows, pipelines, timelines)",
     }
     lines: list[str] = []
     for cat in order:

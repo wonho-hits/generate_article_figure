@@ -58,6 +58,53 @@ VISUAL CONVENTIONS (bio/chem)
 - Reaction arrows: → for forward, ⇌ for equilibrium.
 - Cell compartments labeled with <text>: "Extracellular" / "Intracellular" / "Cytoplasm" / "Nucleus" / "ER" — placed in white space, NOT overlapping any element.
 
+ABSTRACT SCHEMATIC RECIPES (pipelines, workflows, timelines, frameworks)
+Many figures are NOT bio/chem pathways — they're abstract sequences of stages
+(drug discovery pipeline, experimental workflow, research framework, decision
+tree). For these, follow this recipe to avoid boring grey-box output:
+
+1. **Stage colors — use a distinct fill per stage from this 6-color palette**:
+   - Stage 1 (discovery / research / inception):   fill="#E8EEF7" stroke="#3A5F7F"  (light blue)
+   - Stage 2 (lab work / preclinical / build):     fill="#E8F2E0" stroke="#4A7A3F"  (light green)
+   - Stage 3 (early test / Phase I / pilot):       fill="#FFF5DC" stroke="#9C7530"  (light yellow)
+   - Stage 4 (scaled test / Phase II / expand):    fill="#FFE8D8" stroke="#9C5F2A"  (light orange)
+   - Stage 5 (final test / Phase III / verify):    fill="#FFDDD5" stroke="#9C4A47"  (light coral)
+   - Stage 6 (approval / deploy / launch):         fill="#EEDDF2" stroke="#7F4A9C"  (light purple)
+   - Stage 7+ (post / surveillance / maintain):    fill="#E8E8E8" stroke="#666666"  (light grey)
+   Pick colors progressively along the sequence; don't reuse the same color.
+
+2. **Each stage gets an icon** from the general library inside the box, top-center:
+   - Discovery / research:    <use href="#microscope"/> or <use href="#magnifying_glass"/>
+   - Lab / preclinical:        <use href="#lab_flask"/>
+   - Drug / therapeutic:        <use href="#pill_capsule"/>
+   - Clinical / patient:        <use href="#patient_silhouette"/>
+   - Regulatory / approval:     <use href="#document_stamp"/>
+   - Surveillance / analytics:  <use href="#chart_graph"/>
+   - Process / operations:      <use href="#gear"/>
+   - Time / duration:           <use href="#clock"/>
+   - Milestone marker:          <use href="#milestone_marker"/>
+   Icon size 32-44px, positioned 6-10px below the stage box top.
+
+3. **Stage box dimensions**: 140-180px wide × 120-150px tall, rx=10. Stage
+   label centered horizontally, fontsize 16-18 bold, placed BELOW the icon.
+
+4. **Inter-stage arrows**: solid black, stroke-width 2.5, with a triangular
+   marker-end. Place 30-50px gap between stage boxes; arrows live in that gap.
+
+5. **Time axis** (if relevant): horizontal arrow below the stages with
+   stroke-width 2, marker-end. Tick marks at each stage center, optional
+   year/duration labels under each tick. Place the "Time →" label at the far
+   right end of the axis.
+
+6. **Background grouping** (optional): for figures with multi-stage clusters
+   (e.g., "Clinical Trials" containing Phase I/II/III), wrap the sub-stages in
+   a translucent <rect> with fill="<stage_color>" opacity="0.15" and a thin
+   stroke. Place the cluster label above the wrapper.
+
+7. **Avoid all-grey output**: if your figure has 3+ named stages and you find
+   yourself using "#f0f0f0" or "#cccccc" for everything, you are doing it
+   wrong — re-apply rule 1.
+
 TYPOGRAPHY
 - font-family="Helvetica, Arial, sans-serif"
 - Labels: font-size 14-18. Compartment captions can use 16-20.
