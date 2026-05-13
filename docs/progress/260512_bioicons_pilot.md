@@ -1559,21 +1559,85 @@ Hypotheses: 34 채택, 0 reject, 0 partial
 Live tests: ~42 generations across 17 rounds
 ```
 
+### Round 18 — autophagy (autophagosome + lysosome)
+
+Bioicons.com has only generic vacuoles (no autophagy-specific
+icons), so 2 hand-written organelle additions:
+- `autophagosome` (80×80) — double-membrane vesicle (TWO concentric
+  rings — the defining anatomy) engulfing a cargo (damaged
+  mitochondrion fragment).
+- `lysosome` (60×60) — single-membrane acidic compartment (purple
+  palette) with hydrolase enzymes inside.
+
+CATALOG entries under `organelle`. Path A prompt gained an "AUTOPHAGY
+& LYSOSOMAL DEGRADATION" section explicitly distinguishing
+autophagosome (double-membrane) from endocytosis (single-membrane)
+and from lysosome (acidic).
+
+### Round 18 live dogfood — mitophagy
+
+Open prompt asking for a mitophagy sequence (no icon hints):
+
+- **3/3 expected icons picked**: `autophagosome` ×2, `lysosome` ×1,
+  `mitochondrion` ×1.
+- Critic: pass 1 score 1 (1 low), pass 2 tied at 1 — both clean.
+- 4-panel sequence: Damaged Mitochondrion (cytoplasm) → Autophagosome
+  Formation (engulfing damaged mito) → Autophagosome-Lysosome Fusion
+  (autolysosome) → Mitochondrial Degradation (recycling components).
+- For the fusion panel the LLM placed `autophagosome` + `lysosome`
+  side by side with a small "+" label and drew the merged
+  autolysosome stage from primitives — same library + primitive
+  hybrid behaviour seen in round 11 mitosis (anaphase).
+- SVG: 5.9 KB. Visual is publication-ready on first generation.
+  See `analyze/260513_bioicons_round18_autophagy.png`.
+
+### Round 18 verdict
+
+- **NEW H55 [채택]**: 2 hand-written autophagy icons + a Path A
+  prompt section teaching the standard sequence enables one-shot
+  publication-quality mitophagy / autophagy figures. The
+  double-membrane / single-membrane / acidic-palette distinctions in
+  the icon shapes give the LLM enough visual vocabulary to compose
+  the canonical pathway.
+
+### Final state after round 18
+
+```
+SYMBOLS: 83 entries
+   49 hand-written:
+       7 receptor / membrane
+       5 enzyme / protein + caspase
+       5 signaling extension
+       8 small molecule
+       3 modification
+       6 organelle (incl. autophagosome + lysosome ← NEW)
+       1 structural
+       8 general
+       5 ECM matrix / junction primitives
+       1 cell-adhesion (cadherin)
+   20 bundled bioicons composites (8 cell-division + 6 ECM/tissue +
+                                   2 cytoskeleton + 2 trafficking + 2 oncology)
+   14 per-stage wrappers (6 mitosis + 8 meiosis)
+
+Architectural fixes (4): unchanged
+Prompt patterns (3): unchanged
+Tests: 227 passed, 5 skipped
+Cumulative live API cost (this session): ~$0.24
+Hypotheses: 35 채택, 0 reject, 0 partial
+Live tests: ~43 generations across 18 rounds
+```
+
 ### Remaining (genuine follow-ups, not in this pilot)
 
 - **`<image>` (raster) embedding inside `<symbol>`** — for photorealistic
-  icons whose SVG bulk is mostly gradient defs. Could shrink
-  `bioicons_sperm` (337 KB) and Xi-Chen embryo icons (115-140 KB each).
+  icons whose SVG bulk is mostly gradient defs.
 - **Coord templates for other figure types** — round 13 verified the
   pattern for vertical signalling cascades. Could apply similarly to
   ECM panels, mitosis stage rows, multi-cell tissue diagrams.
-- **Autophagy deep dive** — autophagosome, lysosome, mitophagy-specific
-  icons.
 - **Immune signalling deep dive** — TCR/BCR-specific shapes, MHC I/II.
 - **Nuclear receptors** — separate symbol from `transcription_factor`
-  for steroid hormone biology. (Round 17 showed the current setup —
-  `generic_protein` + `transcription_factor` — works adequately, so
-  not pressing.)
+  for steroid hormone biology. (Round 17 showed the current setup
+  works adequately.)
 
 ## Files added / modified
 

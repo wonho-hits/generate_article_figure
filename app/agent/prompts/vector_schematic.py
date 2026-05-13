@@ -341,15 +341,30 @@ as a `generic_protein` with the substrate name.
 VESICLE TRAFFICKING & TRANSLATION
 - `bioicons_endocytosis` (238×222) — cell-membrane closeup showing
   extracellular cargo (orange particles) being engulfed into a budding
-  vesicle. Use for receptor-mediated endocytosis, ligand internalisation,
-  viral entry. Place adjacent to a receptor (gpcr/rtk) to depict the
-  internalisation step; the cargo can represent the ligand+receptor
-  complex.
+  vesicle. Use for ANY vesicle-internalisation pathway: receptor-
+  mediated endocytosis, phagocytosis (macrophage engulfing bacteria),
+  pinocytosis, viral entry. Place adjacent to a receptor (gpcr/rtk) to
+  depict the internalisation step.
 - `bioicons_ribosome` (642×426) — pink ribosome with labeled subunits
   translating mRNA. Use for protein-synthesis figures or to depict the
-  endpoint of a transcription-translation cascade (after the TF
-  activates the gene). Long aspect ratio — fits a horizontal strip in
-  the cytoplasm.
+  endpoint of a transcription-translation cascade.
+
+AUTOPHAGY & LYSOSOMAL DEGRADATION
+- `autophagosome` (80×80) — double-membraned vesicle (TWO concentric
+  circles, the defining anatomy) engulfing a cargo (drawn as a damaged
+  mitochondrion fragment). Use for autophagy / mitophagy / xenophagy
+  figures. Distinct from `endocytosis` (single membrane, extracellular
+  cargo) and from `lysosome` (single membrane, acidic).
+- `lysosome` (60×60) — single-membrane acidic compartment (purple,
+  signals low pH) with hydrolase enzymes inside. Use as the fusion
+  partner with an autophagosome → autolysosome, or for endocytic
+  degradation pathways.
+
+Standard autophagy figure pattern: damaged organelle → enclosed by
+phagophore (drawn as a curving membrane arc) → matures into
+`autophagosome` → fuses with `lysosome` → forms autolysosome → cargo
+is degraded. Show as a left-to-right sequence with arrows; label each
+stage.
 
 CELL-BM ANCHORING (hemidesmosome + basement_membrane)
 The `hemidesmosome` symbol (100×92) depicts the cell ↔ basement-membrane

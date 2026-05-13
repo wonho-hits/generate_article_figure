@@ -1,11 +1,11 @@
 """SVG symbol library for bio/chem schematics.
 
-81 reusable symbols total: 47 hand-written (33 base + 5 signaling extensions
+83 reusable symbols total: 49 hand-written (33 base + 5 signaling extensions
 + 2 cell-adhesion receptors [integrin + cadherin] + 2 proteases [mmp +
 caspase] + 5 ECM/junction primitives [fibronectin, laminin, proteoglycan,
-basement_membrane, hemidesmosome]) + 20 bundled from bioicons.com
-(8 cell-division incl. sperm + morula + blastocyst + 6 ECM/tissue + 2
-cytoskeleton + 2 trafficking + 2 oncology) + 14 per-stage wrappers
+basement_membrane, hemidesmosome] + 2 autophagy organelles [autophagosome,
+lysosome]) + 20 bundled from bioicons.com (8 cell-division + 6 ECM/tissue
++ 2 cytoskeleton + 2 trafficking + 2 oncology) + 14 per-stage wrappers
 cropped from bioicons composites (6 mitosis + 8 meiosis). See
 [ATTRIBUTIONS.md](../../../ATTRIBUTIONS.md) for licenses.
 
@@ -356,6 +356,32 @@ _ORGANELLES: dict[str, str] = {
         <path d="M 14 44 Q 60 38 106 44" stroke="#8B4A8B" stroke-width="2.5" fill="none"/>
         <path d="M 16 56 Q 60 52 104 56" stroke="#8B4A8B" stroke-width="2.5" fill="none"/>
         <path d="M 18 68 Q 60 66 102 68" stroke="#8B4A8B" stroke-width="2.5" fill="none"/>
+    </symbol>""",
+    "autophagosome": """<symbol id="autophagosome" viewBox="0 0 80 80" overflow="visible">
+        <!-- Outer membrane -->
+        <circle cx="40" cy="40" r="36"
+              fill="#E8F0F2" stroke="#5F7F8C" stroke-width="2"/>
+        <!-- Inner membrane (the defining feature — autophagosomes are DOUBLE-membraned) -->
+        <circle cx="40" cy="40" r="30"
+              fill="#FAFAFA" stroke="#5F7F8C" stroke-width="2"/>
+        <!-- Cargo: a damaged mitochondrion fragment being engulfed -->
+        <ellipse cx="40" cy="40" rx="20" ry="11"
+              fill="#F5D4C5" stroke="#8B4A2A" stroke-width="1.5"/>
+        <path d="M 28 40 Q 34 36 40 40 Q 46 44 52 40"
+              fill="none" stroke="#8B4A2A" stroke-width="1.2"/>
+    </symbol>""",
+    "lysosome": """<symbol id="lysosome" viewBox="0 0 60 60" overflow="visible">
+        <!-- Single membrane with acidic interior (purple palette signals
+             low pH / digestive function). -->
+        <circle cx="30" cy="30" r="26"
+              fill="#E2C5D8" stroke="#7F4A6F" stroke-width="2"/>
+        <!-- Hydrolase enzymes scattered inside -->
+        <circle cx="22" cy="22" r="2.5" fill="#7F4A6F"/>
+        <circle cx="38" cy="20" r="2.5" fill="#7F4A6F"/>
+        <circle cx="42" cy="35" r="2.5" fill="#7F4A6F"/>
+        <circle cx="22" cy="40" r="2.5" fill="#7F4A6F"/>
+        <circle cx="33" cy="44" r="2.5" fill="#7F4A6F"/>
+        <circle cx="30" cy="30" r="2.5" fill="#7F4A6F"/>
     </symbol>""",
 }
 
@@ -751,6 +777,23 @@ CATALOG: list[SymbolEntry] = [
     SymbolEntry("golgi", "Golgi apparatus", "organelle",
                 "Stacked Golgi cisternae.",
                 120, 80),
+    SymbolEntry("autophagosome", "Autophagosome", "organelle",
+                "Double-membraned vesicle (TWO concentric circles, the "
+                "defining feature) engulfing a cellular cargo (drawn here "
+                "as a damaged mitochondrion fragment). Use for autophagy / "
+                "mitophagy figures. Place in cytoplasm adjacent to a "
+                "lysosome to depict autophagosome-lysosome fusion → "
+                "autolysosome. Distinct from `endocytosis` (single membrane, "
+                "extracellular cargo) and from `lysosome` (single membrane, "
+                "acidic enzymes).",
+                80, 80),
+    SymbolEntry("lysosome", "Lysosome", "organelle",
+                "Single-membrane acidic vesicle (purple palette signals "
+                "low pH) with scattered hydrolase enzymes inside (dark "
+                "dots). Use for autophagy fusion partners, endocytic "
+                "degradation, viral entry, lysosomal storage disease "
+                "figures. Pair with `autophagosome` for autophagy panels.",
+                60, 60),
     # Structural
     SymbolEntry("lipid_bilayer", "Lipid bilayer", "structural",
                 "Tileable membrane fragment. Use multiple <use> with adjacent x-positions to build a long membrane.",
