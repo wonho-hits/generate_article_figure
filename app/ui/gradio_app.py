@@ -9,8 +9,10 @@ view layer here, the route layer is exercised by mocked + live tests.
 
 from __future__ import annotations
 
+import asyncio
 import base64
 import tempfile
+from collections.abc import AsyncIterator
 from pathlib import Path
 from typing import Any
 
@@ -32,6 +34,16 @@ PLACEHOLDER_HTML = (
     "Type a prompt and click <b>Generate</b>."
     "</div>"
 )
+
+EMPTY_LOG = ""
+
+
+def _format_log(lines: list[str]) -> str:
+    """Render progress log lines as a monospace fenced block."""
+    if not lines:
+        return EMPTY_LOG
+    body = "\n".join(lines)
+    return f"```text\n{body}\n```"
 
 
 # ── helpers ────────────────────────────────────────────────────────────────
@@ -91,15 +103,81 @@ def _write_to_temp(content: bytes, filename: str) -> str:
 
 async def on_generate(
     prompt: str, figure_kind: str, state: dict[str, Any]
-) -> tuple[dict[str, Any], str, str]:
+) -> AsyncIterator[tuple[dict[str, Any], str, str, str, Any]]:
+    """Stream generation progress.
+
+    Yields five-tuples: (state, display_html, status_md, log_md, edit_btn_update).
+
+    Path A emits ~5-7 progress events across initial-gen + critic passes +
+    refinement; Paths B and C are single-step and yield only start + final.
+    The Edit button is enabled iff the resulting session is raster.
+    """
     if not prompt or not prompt.strip():
-        return state, PLACEHOLDER_HTML, "⚠ Prompt is empty."
-    try:
-        result = await _orchestrator().generate(
-            GenerateRequest(prompt=prompt, figure_kind=figure_kind)  # type: ignore[arg-type]
+        yield (
+            state,
+            PLACEHOLDER_HTML,
+            "⚠ Prompt is empty.",
+            EMPTY_LOG,
+            gr.update(),
         )
+        return
+
+    log_lines: list[str] = ["▸ Starting…"]
+    # Sentinel `None` signals "generation finished, drain done".
+    queue: asyncio.Queue[tuple[str, float] | None] = asyncio.Queue()
+
+    def progress_cb(msg: str, frac: float) -> None:
+        # Called from inside the generation coroutine on the same event loop,
+        # so put_nowait is safe (no cross-loop / cross-thread hop).
+        queue.put_nowait((msg, frac))
+
+    async def _run() -> Any:
+        try:
+            return await _orchestrator().generate(
+                GenerateRequest(prompt=prompt, figure_kind=figure_kind),  # type: ignore[arg-type]
+                progress=progress_cb,
+            )
+        finally:
+            queue.put_nowait(None)
+
+    gen_task = asyncio.create_task(_run())
+
+    # Initial yield so the user sees activity before the first model call returns.
+    yield (
+        state,
+        PLACEHOLDER_HTML,
+        "⏳ Working…",
+        _format_log(log_lines),
+        gr.update(interactive=False),
+    )
+
+    while True:
+        item = await queue.get()
+        if item is None:
+            break
+        msg, frac = item
+        pct = int(frac * 100)
+        log_lines.append(f"▸ [{pct:3d}%] {msg}")
+        yield (
+            state,
+            PLACEHOLDER_HTML,
+            f"⏳ {msg} ({pct}%)",
+            _format_log(log_lines),
+            gr.update(interactive=False),
+        )
+
+    try:
+        result = await gen_task
     except Exception as exc:  # surface errors to the UI; orchestrator already logs
-        return state, PLACEHOLDER_HTML, f"❌ {type(exc).__name__}: {exc}"
+        log_lines.append(f"✗ {type(exc).__name__}: {exc}")
+        yield (
+            state,
+            PLACEHOLDER_HTML,
+            f"❌ {type(exc).__name__}: {exc}",
+            _format_log(log_lines),
+            gr.update(interactive=False),
+        )
+        return
 
     new_state = {
         "session_id": result.session_id,
@@ -107,10 +185,15 @@ async def on_generate(
         "revision": 0,
         "artifact": result.artifact,
     }
-    return (
+    log_lines.append(
+        f"✓ Done — kind={result.kind}, session={result.session_id[:8]}…"
+    )
+    yield (
         new_state,
         _render_artifact(result.artifact, result.kind),
         _status_md(new_state, result.routing_reason),
+        _format_log(log_lines),
+        gr.update(interactive=(result.kind == "raster")),
     )
 
 
@@ -246,7 +329,9 @@ def build_ui() -> gr.Blocks:
                         lines=3,
                         placeholder="e.g., remove the duplicate T cell at top-right",
                     )
-                    edit_btn = gr.Button("Edit")
+                    # Disabled until a raster session lands; on_generate flips
+                    # this based on result.kind.
+                    edit_btn = gr.Button("Edit", interactive=False)
 
                 with gr.Group():
                     gr.Markdown("### Status")
@@ -254,6 +339,9 @@ def build_ui() -> gr.Blocks:
 
             with gr.Column(scale=2):
                 display = gr.HTML(value=PLACEHOLDER_HTML)
+
+                with gr.Accordion("Progress log", open=False):
+                    log_md = gr.Markdown(value=EMPTY_LOG)
 
                 with gr.Group():
                     gr.Markdown("### Download")
@@ -265,7 +353,7 @@ def build_ui() -> gr.Blocks:
         generate_btn.click(
             on_generate,
             inputs=[prompt_in, kind_in, state],
-            outputs=[state, display, status_md],
+            outputs=[state, display, status_md, log_md, edit_btn],
         )
         edit_btn.click(
             on_edit,

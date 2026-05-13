@@ -20,8 +20,15 @@ Pipeline:
 from __future__ import annotations
 
 import re
+from typing import Callable
 
 import structlog
+
+# Progress callback signature: (message, fraction in [0, 1]).
+# Pass to `generate_vector_schematic(..., progress=...)` to stream status
+# updates to UI / logs during a multi-step generation. Default `None` is
+# a no-op — backward-compatible with all existing callers.
+ProgressCallback = Callable[[str, float], None]
 
 from app.agent.prompts.layout_critic import (
     VISION_CRITIC_SYSTEM,
@@ -197,6 +204,7 @@ async def generate_vector_schematic(
     *,
     client: GeminiClient | None = None,
     max_refine_passes: int = DEFAULT_MAX_REFINE_PASSES,
+    progress: ProgressCallback | None = None,
 ) -> str:
     """Generate a publication-quality SVG schematic from a natural-language prompt.
 
@@ -211,30 +219,62 @@ async def generate_vector_schematic(
     LOWEST severity-weighted critique score (not the most recent regen — the
     refine loop can occasionally produce a worse output than its predecessor,
     and "keep-best" prevents shipping that regression).
+
+    `progress` is an optional callback `(message, fraction)` invoked at each
+    pipeline step. Use it to stream status updates to a UI. Default `None`
+    is a no-op (back-compat with all existing callers).
     """
     if not prompt or not prompt.strip():
         raise ValueError("prompt is empty")
 
+    def _emit(msg: str, frac: float) -> None:
+        if progress is not None:
+            progress(msg, frac)
+
     client = client or GeminiClient()
+    # Total work units (approximate, for the progress bar): initial gen + per
+    # pass (critic + maybe regen). 1 unit per LLM call.
+    total_steps = 1 + max_refine_passes * 2  # initial + (critic + regen) × passes
+    step = 0
+
+    def _frac() -> float:
+        return min(0.99, step / total_steps) if total_steps > 0 else 0.99
+
+    _emit("Generating initial SVG…", _frac())
     svg = await _generate_and_validate(prompt, client)
+    step += 1
+
     best_svg = svg
     best_score: int | None = None  # None == not yet critiqued
 
     for pass_num in range(max_refine_passes):
+        _emit(f"Vision critic — pass {pass_num + 1}…", _frac())
         critique = await _layout_critic(prompt, svg, client)
+        step += 1
         if not critique.has_issues:
             logger.info("path_a.critic_clean", pass_num=pass_num + 1)
+            _emit(f"Pass {pass_num + 1}: clean ✓ — shipping", 1.0)
             return svg
 
         score = _critique_score(critique)
         if best_score is None or score < best_score:
             best_svg, best_score = svg, score
+            _emit(
+                f"Pass {pass_num + 1}: score {score} "
+                f"({len(critique.issues)} issues) — refining",
+                _frac(),
+            )
         else:
             logger.info(
                 "path_a.refine_regressed",
                 pass_num=pass_num + 1,
                 score=score,
                 best_score=best_score,
+            )
+            _emit(
+                f"Pass {pass_num + 1}: score {score} "
+                f"(regressed vs best {best_score}) — refining",
+                _frac(),
             )
 
         logger.info(
@@ -246,11 +286,16 @@ async def generate_vector_schematic(
         )
         refine_prompt = build_refine_prompt(prompt, critique.issues)
         svg = await _generate_and_validate(refine_prompt, client)
+        step += 1
 
     # All passes surfaced issues; ship the best critiqued candidate.
     # The final regen is intentionally discarded — we have no critique for it,
     # so we cannot prove it is better than the best we already verified.
     logger.info("path_a.refine_returning_best", best_score=best_score)
+    _emit(
+        f"Done — shipping best critiqued candidate (score {best_score})",
+        1.0,
+    )
     return best_svg
 
 

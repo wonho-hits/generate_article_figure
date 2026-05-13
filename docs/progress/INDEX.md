@@ -18,6 +18,13 @@
 
 Steps 1, 2, 3, 4, 5, 8, 9, 6 in actual execution order — the build order was reordered after the Path C probe (probe scored Path C 6/8 ADOPT, promoting it ahead of Path B and pulling inpainting forward as the fixer for Path C defects). Step 8 (Gradio) was promoted ahead of Path B because dogfooding had higher signal value than another generation path. Step 9 (symbol library) was demoted to optional after the Path C probe but re-promoted after Step 8 dogfooding revealed Path A quality issues.
 
+## Post-MVP
+
+| Date | Topic | Outcome |
+|------|-------|---------|
+| 260512 | [bioicons pilot](260512_bioicons_pilot.md) | Symbol library expanded across 13 biological domains; 4 architectural fixes; cross-domain composition verified |
+| 260513 | [Gradio streaming progress](260513_gradio_streaming_progress.md) | Path A progress callback → orchestrator → async-generator Gradio handler; live log + Edit-button gating |
+
 Step 7 (background removal) deferred — Path C output is already on white in practice.
 
 ## Key hypotheses (final status)

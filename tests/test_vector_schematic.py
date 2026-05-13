@@ -501,4 +501,51 @@ async def test_critic_render_failure_does_not_block_output(monkeypatch) -> None:
     )
     assert "<svg" in result
     assert client.generate_text.await_count == 1
+
+
+@pytest.mark.asyncio
+async def test_progress_callback_receives_monotonic_updates() -> None:
+    """The optional `progress` callback is invoked at each pipeline step with a
+    (message, fraction) tuple. Fractions are monotonically non-decreasing and
+    land at exactly 1.0 on shipping. This contract is what powers the Gradio
+    streaming UI; a regression here = silent UX breakage during ~3-min runs.
+    """
+    clean = LayoutCritique(has_issues=False, issues=[])
+    client = _mock_client([GOOD_SVG], critic_responses=[clean])
+
+    events: list[tuple[str, float]] = []
+
+    def progress(msg: str, frac: float) -> None:
+        events.append((msg, frac))
+
+    await generate_vector_schematic(
+        "draw kinase",
+        client=client,
+        max_refine_passes=1,
+        progress=progress,
+    )
+
+    # Expect: initial-gen tick, critic-pass tick, final-ship tick.
+    assert len(events) >= 3
+    messages = [m for m, _ in events]
+    fractions = [f for _, f in events]
+
+    # Phase markers we depend on for the log readability in the UI.
+    assert any("initial" in m.lower() for m in messages)
+    assert any("critic" in m.lower() or "pass" in m.lower() for m in messages)
+
+    # Monotonic non-decreasing, capped at 1.0, final tick == 1.0 on clean exit.
+    assert all(0.0 <= f <= 1.0 for f in fractions)
+    assert fractions == sorted(fractions)
+    assert fractions[-1] == 1.0
+
+
+@pytest.mark.asyncio
+async def test_progress_callback_default_none_is_no_op() -> None:
+    """Existing callers passing no `progress` must keep working unchanged."""
+    client = _mock_client([GOOD_SVG])
+    result = await generate_vector_schematic(
+        "draw EGFR", client=client, max_refine_passes=0
+    )
+    assert "<svg" in result
     client.generate_text_with_image.assert_not_called()

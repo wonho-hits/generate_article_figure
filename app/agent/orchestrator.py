@@ -27,7 +27,7 @@ from app.tools.raster_illustration import (
     detect_image_mime,
     generate_raster_illustration,
 )
-from app.tools.vector_schematic import generate_vector_schematic
+from app.tools.vector_schematic import ProgressCallback, generate_vector_schematic
 
 logger = structlog.get_logger(__name__)
 
@@ -52,7 +52,12 @@ class Orchestrator:
         self._router = router or Router(client=client)
         self._client = client
 
-    async def generate(self, request: GenerateRequest) -> GenerateResult:
+    async def generate(
+        self,
+        request: GenerateRequest,
+        *,
+        progress: ProgressCallback | None = None,
+    ) -> GenerateResult:
         decision = await self._resolve_path(request.prompt, request.figure_kind)
         logger.info(
             "orchestrator.dispatch",
@@ -61,15 +66,21 @@ class Orchestrator:
         )
 
         if decision.path == "A":
-            return await self._dispatch_vector(request, decision)
+            return await self._dispatch_vector(request, decision, progress=progress)
         if decision.path == "B":
             return await self._dispatch_chemistry(request, decision)
         return await self._dispatch_raster(request, decision)
 
     async def _dispatch_vector(
-        self, request: GenerateRequest, decision: RoutingDecision
+        self,
+        request: GenerateRequest,
+        decision: RoutingDecision,
+        *,
+        progress: ProgressCallback | None = None,
     ) -> GenerateResult:
-        svg = await generate_vector_schematic(request.prompt, client=self._client)
+        svg = await generate_vector_schematic(
+            request.prompt, client=self._client, progress=progress
+        )
         entry = await self._sessions.create()
         await self._sessions.update(entry.session_id, svg)
         return GenerateResult(
