@@ -38,7 +38,7 @@ def test_catalog_entries_are_well_formed() -> None:
             "receptor", "enzyme", "signaling", "small_molecule",
             "modification", "organelle", "structural", "general",
             "cell_division", "cell_cycle_stage", "ecm", "cytoskeleton",
-            "trafficking", "oncology",
+            "trafficking", "oncology", "immunology",
         }
         assert e.use_when
         assert e.default_w > 0 and e.default_h > 0

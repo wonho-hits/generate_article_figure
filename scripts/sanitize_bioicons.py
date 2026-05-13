@@ -174,6 +174,31 @@ PICKS: list[Pick] = [
         author="Servier Medical Art",
         license="CC BY 3.0",
     ),
+    # Immune system (Servier Blood_Immunology).
+    Pick(
+        slug="bioicons_antibody",
+        repo_path="static/icons/cc-by-3.0/Blood_Immunology/Servier/antibody.svg",
+        author="Servier Medical Art",
+        license="CC BY 3.0",
+    ),
+    Pick(
+        slug="bioicons_t_lymphocyte",
+        repo_path="static/icons/cc-by-3.0/Blood_Immunology/Servier/t-lymphocyte.svg",
+        author="Servier Medical Art",
+        license="CC BY 3.0",
+    ),
+    Pick(
+        slug="bioicons_b_lymphocyte",
+        repo_path="static/icons/cc-by-3.0/Blood_Immunology/Servier/b-lymphocyte.svg",
+        author="Servier Medical Art",
+        license="CC BY 3.0",
+    ),
+    Pick(
+        slug="bioicons_macrophage",
+        repo_path="static/icons/cc-by-3.0/Blood_Immunology/Servier/macrophage.svg",
+        author="Servier Medical Art",
+        license="CC BY 3.0",
+    ),
 ]
 
 

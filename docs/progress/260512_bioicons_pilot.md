@@ -1627,17 +1627,118 @@ Hypotheses: 35 채택, 0 reject, 0 partial
 Live tests: ~43 generations across 18 rounds
 ```
 
+### Round 19 — immunology (antibody + T/B cells + macrophage + MHC)
+
+Added 5 new symbols for immune-system figures. The last big
+documented domain gap.
+
+**Bundled (Servier Blood_Immunology, CC BY 3.0):**
+- `bioicons_antibody` (70×83) — classic grey Y-shape IgG.
+- `bioicons_t_lymphocyte` (124×127) — T cell, blue/pink round lymphocyte.
+- `bioicons_b_lymphocyte` (122×118) — B cell (visually similar to T cell
+  — real biology has them indistinguishable under standard microscopy).
+- `bioicons_macrophage` (150×162) — stellate antigen-presenting cell
+  with characteristic pseudopodial extensions, green palette.
+
+**Hand-written:**
+- `mhc_complex` (50×80) — transmembrane MHC molecule with an open
+  peptide-binding groove on top, holding a magenta peptide. Distinct
+  shape from regular `gpcr`/`rtk`/`integrin` because of the
+  characteristic groove anatomy.
+
+New CATALOG category `immunology`. Path A prompt gained IMMUNOLOGY
+section with the canonical immune-synapse pattern:
+> macrophage / APC LEFT → mhc_complex on its surface → small synapse
+> gap → TCR (generic_membrane_protein) on t_lymphocyte RIGHT →
+> label peptide, MHC isoform, T-cell type
+
+### Round 19 live dogfood — antigen presentation
+
+Open prompt asking for "Antigen Presentation and T-cell Activation"
+with no icon hints.
+
+- **3/3 expected icons picked**: `bioicons_macrophage` ×1,
+  `bioicons_t_lymphocyte` ×1, `mhc_complex` ×1.
+- Plus creative additions:
+  - `generic_membrane_protein` ×1 — used for TCR (correct fallback;
+    we don't have a TCR-specific icon).
+  - `ligand` ×3 — used for cytokines released by activated T cell
+    (validates the round-17 extended ligand description).
+- Critic: pass 1 score 5 (1 high + 1 low), pass 2 tied at 5.
+  Keep-best chose pass 1.
+- Visual: macrophage with MHC-II/peptide on left, "Binding / Immune
+  Synapse" arrow across to TCR + CD4+ T cell on right, "Activation"
+  curved arrow to cytokines on the far right. Biology impeccable.
+- See `analyze/260513_bioicons_round19_antigen_presentation.png`.
+
+### Round 19 verdict
+
+- **NEW H56 [채택]**: A core set of 5 immune icons (4 cells +
+  mhc_complex) + a Path A prompt section is sufficient for the
+  canonical antigen-presentation figure. The LLM also creatively used
+  `generic_membrane_protein` as TCR fallback (no dedicated TCR icon
+  needed) and `ligand` for cytokines.
+
+### Final state after round 19
+
+```
+SYMBOLS: 88 entries
+   50 hand-written:
+       8 receptor / membrane (incl. mhc_complex ← NEW)
+       5 enzyme / protein + caspase
+       5 signaling extension
+       8 small molecule
+       3 modification
+       6 organelle (incl. autophagosome + lysosome)
+       1 structural
+       8 general
+       5 ECM matrix / junction primitives
+       1 cell-adhesion (cadherin)
+   24 bundled bioicons composites:
+       8 cell-division/development
+       6 ECM/tissue
+       2 cytoskeleton
+       2 trafficking
+       2 oncology
+       4 immunology (antibody, t_lymphocyte, b_lymphocyte, macrophage)
+                                                                 ← NEW
+   14 per-stage wrappers (6 mitosis + 8 meiosis)
+
+Architectural fixes (4): unchanged
+Prompt patterns (3): unchanged
+Tests: 232 passed, 5 skipped
+Cumulative live API cost (this session): ~$0.26
+Hypotheses: 36 채택, 0 reject, 0 partial
+Live tests: ~45 generations across 19 rounds
+
+Domain coverage (verified production-ready):
+  ✓ Signaling (MAPK/GPCR/Wnt/Insulin/TLR/steroid hormone)
+  ✓ Apoptosis (intrinsic + extrinsic)
+  ✓ ECM (collagen/fibronectin/laminin/proteoglycan/BM)
+  ✓ ECM ↔ cell bridge (integrin + cytoskeleton)
+  ✓ Matrix remodelling (MMP)
+  ✓ Cell-cell adhesion quartet (tight / gap / desmosome / hemidesmosome)
+  ✓ Cell division per-stage (mitosis 6 + meiosis 8)
+  ✓ Early development arc (sperm → blastocyst)
+  ✓ Vesicle trafficking / phagocytosis / translation
+  ✓ Cancer invasion / matrix degradation
+  ✓ Autophagy / mitophagy
+  ✓ EMT (multi-domain composition)
+  ✓ Immunology / antigen presentation / immune synapse  ← NEW
+```
+
 ### Remaining (genuine follow-ups, not in this pilot)
 
 - **`<image>` (raster) embedding inside `<symbol>`** — for photorealistic
   icons whose SVG bulk is mostly gradient defs.
-- **Coord templates for other figure types** — round 13 verified the
-  pattern for vertical signalling cascades. Could apply similarly to
-  ECM panels, mitosis stage rows, multi-cell tissue diagrams.
-- **Immune signalling deep dive** — TCR/BCR-specific shapes, MHC I/II.
-- **Nuclear receptors** — separate symbol from `transcription_factor`
-  for steroid hormone biology. (Round 17 showed the current setup
-  works adequately.)
+- **Coord templates for other figure types** — round 13 verified for
+  vertical cascades; could extend to ECM panels, mitosis rows, etc.
+- **Nuclear receptors** — separate symbol from `transcription_factor`.
+  (Round 17 showed the current setup works adequately for steroid
+  hormone biology.)
+- **TCR/BCR specific icons** — round 19 used `generic_membrane_protein`
+  as TCR fallback. A dedicated αβ-TCR shape would be more anatomically
+  correct.
 
 ## Files added / modified
 

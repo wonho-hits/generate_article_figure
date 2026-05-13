@@ -1,13 +1,13 @@
 """SVG symbol library for bio/chem schematics.
 
-83 reusable symbols total: 49 hand-written (33 base + 5 signaling extensions
-+ 2 cell-adhesion receptors [integrin + cadherin] + 2 proteases [mmp +
-caspase] + 5 ECM/junction primitives [fibronectin, laminin, proteoglycan,
-basement_membrane, hemidesmosome] + 2 autophagy organelles [autophagosome,
-lysosome]) + 20 bundled from bioicons.com (8 cell-division + 6 ECM/tissue
-+ 2 cytoskeleton + 2 trafficking + 2 oncology) + 14 per-stage wrappers
-cropped from bioicons composites (6 mitosis + 8 meiosis). See
-[ATTRIBUTIONS.md](../../../ATTRIBUTIONS.md) for licenses.
+88 reusable symbols total: 50 hand-written (33 base + 5 signaling extensions
++ 3 cell-adhesion receptors [integrin + cadherin + mhc_complex] + 2
+proteases [mmp + caspase] + 5 ECM/junction primitives [fibronectin, laminin,
+proteoglycan, basement_membrane, hemidesmosome] + 2 autophagy organelles
+[autophagosome, lysosome]) + 24 bundled from bioicons.com (8 cell-division
++ 6 ECM/tissue + 2 cytoskeleton + 2 trafficking + 2 oncology + 4 immunology)
++ 14 per-stage wrappers cropped from bioicons composites (6 mitosis +
+8 meiosis). See [ATTRIBUTIONS.md](../../../ATTRIBUTIONS.md) for licenses.
 
 Bundled symbols are LAZY-injected: at runtime Path A scans the LLM's emitted
 SVG for `<use href="#...">` references and only the matched symbols land in
@@ -99,6 +99,24 @@ _RECEPTORS: dict[str, str] = {
         <!-- Cytoplasmic tail (connects to β-catenin/actin) -->
         <line x1="16" y1="78" x2="16" y2="92"
               stroke="#3A5F7F" stroke-width="2.2" stroke-linecap="round"/>
+    </symbol>""",
+    "mhc_complex": """<symbol id="mhc_complex" viewBox="0 0 50 80" overflow="visible">
+        <!-- Antigen-presenting molecule: transmembrane body with a top
+             peptide-binding groove. Represents MHC class I or II — label
+             with <text> for the specific isoform. -->
+        <!-- Transmembrane body (receptor palette) -->
+        <rect x="10" y="12" width="30" height="60" rx="5"
+              fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2"/>
+        <!-- Peptide-binding groove on top (open arms) -->
+        <path d="M 8 12 Q 12 2 25 4 Q 38 2 42 12"
+              fill="#A8D6E2" stroke="#3A5F7F" stroke-width="2"
+              stroke-linejoin="round"/>
+        <!-- Bound peptide (small magenta rod sitting in the groove) -->
+        <rect x="17" y="3" width="16" height="3.5" rx="1.5"
+              fill="#C84A6F" stroke="#7F2F4A" stroke-width="0.8"/>
+        <!-- Short cytoplasmic tail -->
+        <line x1="25" y1="72" x2="25" y2="78"
+              stroke="#3A5F7F" stroke-width="2.5" stroke-linecap="round"/>
     </symbol>""",
     "integrin": """<symbol id="integrin" viewBox="0 0 60 92" overflow="visible">
         <!-- Alpha subunit (left): rectangular body + small head bulge -->
@@ -645,6 +663,16 @@ CATALOG: list[SymbolEntry] = [
     SymbolEntry("generic_membrane_protein", "Generic membrane protein", "receptor",
                 "Membrane protein that doesn't fit a more specific category.",
                 60, 80),
+    SymbolEntry("mhc_complex", "MHC class I/II (antigen-presenting)",
+                "receptor",
+                "Antigen-presenting molecule: transmembrane body with an "
+                "open peptide-binding groove on top holding a small magenta "
+                "peptide. Use for antigen-presentation figures (MHC-I on "
+                "all nucleated cells, MHC-II on APCs). Place on the antigen-"
+                "presenting cell's surface; the peptide groove faces a TCR "
+                "on a facing T-lymphocyte. Add a <text> for the specific "
+                "isoform (MHC-I, MHC-II, HLA-A2, etc.).",
+                50, 80),
     SymbolEntry("integrin", "Integrin (αβ heterodimer)", "receptor",
                 "Cell-matrix adhesion receptor — heterodimer of α and β "
                 "subunits (labels live inside each body). Extracellular heads "
@@ -976,6 +1004,34 @@ CATALOG: list[SymbolEntry] = [
                 "tumor microenvironment context, or as a target object for "
                 "treatment-pathway figures.",
                 97, 95),
+    # Immunology (bundled — Servier Blood_Immunology).
+    SymbolEntry("bioicons_antibody", "Antibody (Y-shape)", "immunology",
+                "Classic grey Y-shaped antibody / immunoglobulin (IgG-like). "
+                "Use for immune-response figures: antigen binding, opsonisation, "
+                "neutralisation, antibody-mediated effector functions. Add a "
+                "<text> for isotype (IgG, IgM, IgA, IgE, IgD) when relevant.",
+                70, 83),
+    SymbolEntry("bioicons_t_lymphocyte", "T lymphocyte", "immunology",
+                "T cell — blue/pink round lymphocyte with prominent nucleus. "
+                "Use for adaptive-immunity figures (helper T cells, cytotoxic "
+                "T cells, regulatory T cells). Visually similar to "
+                "`bioicons_b_lymphocyte` — distinguish by <text> label "
+                "(CD4+, CD8+, Th1, etc.).",
+                124, 127),
+    SymbolEntry("bioicons_b_lymphocyte", "B lymphocyte", "immunology",
+                "B cell — round lymphocyte (visually similar to T cell — real "
+                "biology has them indistinguishable under standard microscopy). "
+                "Use for humoral-immunity figures, plasma-cell differentiation, "
+                "antibody production. Distinguish from T cell by adjacent "
+                "<text> label.",
+                122, 118),
+    SymbolEntry("bioicons_macrophage", "Macrophage", "immunology",
+                "Stellate macrophage / antigen-presenting cell with "
+                "characteristic pseudopodial extensions. Use for innate-immunity, "
+                "phagocytosis, antigen presentation (pair with mhc_complex on "
+                "its surface and a facing t_lymphocyte for the immune-synapse "
+                "picture). Green palette signals 'immune cell' role.",
+                150, 162),
     # Cytoskeleton (third-party, Servier line-art).
     SymbolEntry("bioicons_microtubule", "Microtubule lattice", "cytoskeleton",
                 "Blue tubulin lattice showing the 13-protofilament structure "
@@ -1117,6 +1173,7 @@ def build_catalog_for_prompt() -> str:
         "receptor", "enzyme", "signaling", "small_molecule", "modification",
         "organelle", "structural", "general", "cell_division",
         "cell_cycle_stage", "ecm", "cytoskeleton", "trafficking", "oncology",
+        "immunology",
     ]
     titles = {
         "receptor": "Receptors / membrane proteins",
@@ -1147,6 +1204,11 @@ def build_catalog_for_prompt() -> str:
         "oncology": (
             "Cancer cells & tumor masses (third-party, detail-rich) — "
             "use INSTEAD of `generic_protein` labelled 'Tumor cell'"
+        ),
+        "immunology": (
+            "Immune cells & antibodies (third-party, detail-rich) — "
+            "T cells, B cells, macrophages, antibodies. Pair with "
+            "`mhc_complex` (in receptors) for antigen-presentation figures"
         ),
     }
     lines: list[str] = []

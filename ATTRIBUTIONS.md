@@ -33,6 +33,10 @@ that file for the transformation pipeline). The original SVGs live in
 | `bioicons_ribosome`      | `static/icons/cc-by-3.0/Nucleic_acids/Servier/ribosome-translation.svg` | [Servier Medical Art](https://smart.servier.com/) via [bioicons.com](https://bioicons.com) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)    |
 | `bioicons_cancer_cell`   | `static/icons/cc-by-3.0/Oncology/Servier/cancerous-cell-1.svg`    | [Servier Medical Art](https://smart.servier.com/) via [bioicons.com](https://bioicons.com) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)          |
 | `bioicons_tumor`         | `static/icons/cc-by-3.0/Oncology/Servier/tumor.svg`               | [Servier Medical Art](https://smart.servier.com/) via [bioicons.com](https://bioicons.com) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)          |
+| `bioicons_antibody`      | `static/icons/cc-by-3.0/Blood_Immunology/Servier/antibody.svg`    | [Servier Medical Art](https://smart.servier.com/) via [bioicons.com](https://bioicons.com) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)          |
+| `bioicons_t_lymphocyte`  | `static/icons/cc-by-3.0/Blood_Immunology/Servier/t-lymphocyte.svg`| [Servier Medical Art](https://smart.servier.com/) via [bioicons.com](https://bioicons.com) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)          |
+| `bioicons_b_lymphocyte`  | `static/icons/cc-by-3.0/Blood_Immunology/Servier/b-lymphocyte.svg`| [Servier Medical Art](https://smart.servier.com/) via [bioicons.com](https://bioicons.com) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)          |
+| `bioicons_macrophage`    | `static/icons/cc-by-3.0/Blood_Immunology/Servier/macrophage.svg`  | [Servier Medical Art](https://smart.servier.com/) via [bioicons.com](https://bioicons.com) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)          |
 
 ## License notes
 

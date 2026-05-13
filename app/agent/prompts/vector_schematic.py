@@ -413,6 +413,32 @@ add a "Migration →" arrow indicating direction of invasion. For
 tumor-microenvironment figures, use `bioicons_tumor` as the central
 mass surrounded by fibroblasts and ECM.
 
+IMMUNOLOGY — immune cells & antigen presentation
+For immune-system figures use these instead of generic shapes:
+- `bioicons_antibody` (70×83) — grey Y-shape IgG-like antibody.
+- `bioicons_t_lymphocyte` / `bioicons_b_lymphocyte` (~120×120) —
+  round lymphocytes. They are visually similar (real biology); label
+  each with `<text>` for cell type (CD4+, CD8+, plasma cell, etc.).
+- `bioicons_macrophage` (150×162) — stellate cell with pseudopodial
+  extensions, green palette. Most common antigen-presenting cell shape.
+- `mhc_complex` (50×80) — transmembrane MHC molecule with a peptide-
+  binding groove on top holding a magenta peptide.
+
+Antigen-presentation pattern (immune synapse):
+1. Draw the macrophage / APC at LEFT.
+2. Place `mhc_complex` on its surface (top edge of the cell).
+3. Draw a small gap representing the immune-synapse space.
+4. Draw `bioicons_t_lymphocyte` at RIGHT, with its surface facing the
+   APC. Add a small "TCR" labelled shape (use `generic_membrane_protein`
+   or a custom Y/T-shape) on the T-cell membrane directly opposite
+   the `mhc_complex`.
+5. Label the antigen ("Antigen peptide"), MHC isoform ("MHC-II"), and
+   T-cell type ("CD4+ helper T cell").
+
+Antibody response pattern: place the antibody Y-shape above a
+labelled antigen (e.g. virus, bacterium, or generic_protein). For
+opsonisation, draw multiple antibodies coating the target.
+
 INTEGRIN + CYTOSKELETON BRIDGE (ECM ↔ cell)
 The `integrin` symbol (hand-written, αβ heterodimer) is the natural
 receptor that bridges the ECM to the cell. For figures showing how a
