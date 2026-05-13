@@ -12,6 +12,7 @@ from app.domain.bio_symbols import (
     SymbolEntry,
     build_catalog_for_prompt,
     build_defs_block,
+    build_defs_block_for,
 )
 
 
@@ -34,8 +35,10 @@ def test_catalog_entries_are_well_formed() -> None:
         seen_ids.add(e.id)
         assert e.name
         assert e.category in {
-            "receptor", "enzyme", "small_molecule",
+            "receptor", "enzyme", "signaling", "small_molecule",
             "modification", "organelle", "structural", "general",
+            "cell_division", "cell_cycle_stage", "ecm", "cytoskeleton",
+            "trafficking", "oncology",
         }
         assert e.use_when
         assert e.default_w > 0 and e.default_h > 0
@@ -69,6 +72,31 @@ def test_build_defs_block_is_valid_xml_when_wrapped_in_svg() -> None:
         "</svg>"
     )
     ET.fromstring(svg)
+
+
+def test_build_defs_block_for_emits_only_requested_symbols() -> None:
+    block = build_defs_block_for(["gpcr", "kinase"])
+    assert block.startswith("<defs>")
+    assert block.rstrip().endswith("</defs>")
+    assert '<symbol id="gpcr"' in block
+    assert '<symbol id="kinase"' in block
+    # Spot-check that an unrequested symbol is absent.
+    assert '<symbol id="nucleus"' not in block
+
+
+def test_build_defs_block_for_is_empty_when_no_requested_ids_known() -> None:
+    """Returns empty string (NOT '<defs></defs>') so callers can splice
+    unconditionally without leaving a wasted wrapper in the output."""
+    assert build_defs_block_for([]) == ""
+    assert build_defs_block_for(["does_not_exist", "also_made_up"]) == ""
+
+
+def test_build_defs_block_for_skips_unknown_ids_silently() -> None:
+    block = build_defs_block_for(["gpcr", "does_not_exist", "kinase"])
+    assert '<symbol id="gpcr"' in block
+    assert '<symbol id="kinase"' in block
+    # No "does_not_exist" leaks into the block content.
+    assert "does_not_exist" not in block
 
 
 def test_build_catalog_for_prompt_is_grouped_by_category() -> None:

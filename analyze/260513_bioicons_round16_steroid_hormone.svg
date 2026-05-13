@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs>
+<symbol id="transcription_factor" viewBox="0 0 60 50" overflow="visible">
+        
+        <path d="M 10 30 Q 10 6 30 6 Q 50 6 50 30 Z" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" stroke-linejoin="round" />
+        
+        <line x1="17" y1="30" x2="17" y2="42" stroke="#4A7A3F" stroke-width="2.5" stroke-linecap="round" />
+        <line x1="43" y1="30" x2="43" y2="42" stroke="#4A7A3F" stroke-width="2.5" stroke-linecap="round" />
+        
+        <path d="M 2 45 Q 12 41 22 45 T 42 45 Q 52 41 58 45" fill="none" stroke="#888888" stroke-width="1.5" />
+        <path d="M 2 48 Q 12 52 22 48 T 42 48 Q 52 52 58 48" fill="none" stroke="#888888" stroke-width="1.5" />
+    </symbol>
+<symbol id="nucleus" viewBox="0 0 200 150" overflow="visible">
+        <ellipse cx="100" cy="75" rx="92" ry="65" fill="#F0E0F0" stroke="#5A2A7C" stroke-width="2.5" />
+        <ellipse cx="100" cy="75" rx="86" ry="60" fill="none" stroke="#5A2A7C" stroke-width="1" opacity="0.6" />
+        <circle cx="20" cy="60" r="3" fill="#5A2A7C" />
+        <circle cx="180" cy="65" r="3" fill="#5A2A7C" />
+        <circle cx="100" cy="12" r="3" fill="#5A2A7C" />
+        <circle cx="100" cy="138" r="3" fill="#5A2A7C" />
+    </symbol>
+<symbol id="complex" viewBox="0 0 110 60" overflow="visible">
+        <ellipse cx="30" cy="30" rx="25" ry="18" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" />
+        <ellipse cx="62" cy="30" rx="25" ry="18" fill="#A8C5D4" stroke="#4A6F7F" stroke-width="2" />
+        <ellipse cx="88" cy="30" rx="20" ry="14" fill="#D4C5A8" stroke="#7F6F4A" stroke-width="2" />
+    </symbol>
+<symbol id="generic_protein" viewBox="0 0 80 50" overflow="visible">
+        <rect x="5" y="5" width="70" height="40" rx="20" fill="#D4D4D4" stroke="#666666" stroke-width="2" />
+    </symbol>
+</defs>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+    </marker>
+    <filter id="stage_shadow" x="-5%" y="-5%" width="115%" height="125%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  
+  <g id="figure_title">
+    <text x="500" y="40" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a1a1a" font-family="Helvetica, Arial, sans-serif">Steroid Hormone Signaling Pathway</text>
+  </g>
+
+  
+  <g id="extracellular_compartment_label" data-role="compartment_label">
+    <text x="100" y="100" font-size="16" fill="#666" font-family="Helvetica, Arial, sans-serif">Extracellular</text>
+  </g>
+  <g id="steroid_hormone" data-role="entity">
+    <rect x="470" y="120" width="60" height="40" rx="10" fill="#E7A8A8" stroke="#D18989" stroke-width="2" />
+    <text x="500" y="145" text-anchor="middle" font-size="14" fill="#333" font-family="Helvetica, Arial, sans-serif">Hormone</text>
+  </g>
+
+  
+  <g id="cell_membrane" data-role="structural_element">
+    <line x1="0" y1="200" x2="1000" y2="200" stroke="#888" stroke-width="2" />
+    <line x1="0" y1="220" x2="1000" y2="220" stroke="#888" stroke-width="2" />
+  </g>
+
+  
+  <g id="cytoplasm_compartment_label" data-role="compartment_label">
+    <text x="100" y="280" font-size="16" fill="#666" font-family="Helvetica, Arial, sans-serif">Cytoplasm</text>
+  </g>
+  <g id="nuclear_receptor_cytoplasm" data-role="entity">
+    <use href="#generic_protein" x="460" y="320" width="80" height="50" />
+    <text x="500" y="385" text-anchor="middle" font-size="14" font-family="Helvetica, Arial, sans-serif">Nuclear Receptor</text>
+  </g>
+
+  
+  <g id="hormone_diffusion_binding_arrow" data-role="arrow">
+    <path d="M500,160 L500,200 M500,220 L500,320" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    <path d="M500,370 V450" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  </g>
+
+  <g id="hormone_receptor_complex" data-role="entity">
+    <use href="#complex" x="445" y="450" width="110" height="60" />
+    <text x="500" y="525" text-anchor="middle" font-size="14" font-family="Helvetica, Arial, sans-serif">Hormone-Receptor Complex</text>
+  </g>
+
+  
+  <g id="nucleus_container" data-role="compartment">
+    <use href="#nucleus" x="350" y="600" width="300" height="200" />
+    <text x="100" y="650" font-size="16" fill="#666" font-family="Helvetica, Arial, sans-serif">Nucleus</text>
+  </g>
+
+  
+  <g id="translocation_arrow" data-role="arrow">
+    <path d="M500,510 V600" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  </g>
+
+  
+  <g id="hre_binding_gene_activation" data-role="entity">
+    <use href="#transcription_factor" x="470" y="680" width="60" height="50" />
+    <text x="500" y="745" text-anchor="middle" font-size="14" font-family="Helvetica, Arial, sans-serif">HRE Binding</text>
+  </g>
+
+  
+  <g id="gene_transcription_arrow" data-role="arrow">
+    <path d="M500,730 V820" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  </g>
+  <g id="gene_transcription_text" data-role="outcome">
+    <text x="500" y="850" text-anchor="middle" font-size="18" font-weight="bold" fill="#1a1a1a" font-family="Helvetica, Arial, sans-serif">Gene Transcription</text>
+  </g>
+</svg>

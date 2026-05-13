@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 600"><defs>
+<symbol id="rtk" viewBox="0 0 60 100" overflow="visible">
+        <rect x="10" y="5" width="40" height="32" rx="4" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2" />
+        <rect x="22" y="37" width="16" height="22" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2" />
+        <ellipse cx="30" cy="78" rx="22" ry="16" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" />
+        <text x="30" y="83" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#4A7A3F" font-weight="bold">K</text>
+    </symbol>
+<symbol id="p_badge" viewBox="0 0 24 24" overflow="visible">
+        <circle cx="12" cy="12" r="10" fill="#FF6B47" stroke="#A33020" stroke-width="1.5" />
+        <text x="12" y="16" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="white" font-weight="bold">P</text>
+    </symbol>
+<symbol id="ligand" viewBox="0 0 40 30" overflow="visible">
+        
+        <path d="M 20 5 Q 8 5 8 15 Q 8 25 20 25 Q 32 25 32 15 Q 32 5 20 5 Z" fill="#FFD8B0" stroke="#C86B1F" stroke-width="1.8" stroke-linejoin="round" />
+        
+        <circle cx="14" cy="13" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+        <circle cx="26" cy="17" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+    </symbol>
+<symbol id="generic_protein" viewBox="0 0 80 50" overflow="visible">
+        <rect x="5" y="5" width="70" height="40" rx="20" fill="#D4D4D4" stroke="#666666" stroke-width="2" />
+    </symbol>
+<symbol id="kinase" viewBox="0 0 80 50" overflow="visible">
+        <ellipse cx="40" cy="25" rx="35" ry="20" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" />
+    </symbol>
+</defs>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+    </marker>
+  </defs>
+
+  
+  <g id="cell_membrane" data-role="structural_element">
+    <line x1="0" y1="280" x2="1600" y2="280" stroke="#888" stroke-width="2" />
+    <line x1="0" y1="300" x2="1600" y2="300" stroke="#888" stroke-width="2" />
+  </g>
+
+  
+  <g id="compartment_labels" data-role="labels">
+    <text x="100" y="80" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#555555" text-anchor="start">Extracellular Space</text>
+    <text x="100" y="360" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#555555" text-anchor="start">Cytoplasm</text>
+  </g>
+
+  
+  <g id="insulin_ligand" data-role="ligand">
+    <use href="#ligand" x="180" y="140" width="40" height="30" />
+    <text x="200" y="185" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle">Insulin</text>
+  </g>
+
+  
+  <g id="insulin_receptor" data-role="receptor">
+    <use href="#rtk" x="170" y="210" width="60" height="100" />
+    <text x="200" y="190" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle">Insulin Receptor</text>
+  </g>
+
+  
+  <g id="irs1_protein" data-role="protein">
+    <use href="#generic_protein" x="150" y="340" width="80" height="50" />
+    <text x="190" y="410" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle">IRS-1</text>
+  </g>
+
+  
+  <g id="pi3k_kinase" data-role="kinase">
+    <use href="#kinase" x="350" y="340" width="80" height="50" />
+    <text x="390" y="410" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle">PI3K</text>
+    <use href="#p_badge" x="400" y="320" width="24" height="24" />
+  </g>
+
+  
+  <g id="lipid_conversion" data-role="lipid_signaling">
+    <rect x="500" y="290" width="60" height="30" rx="5" fill="#88b" stroke="#668" stroke-width="1.5" />
+    <text x="530" y="275" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle">PIP2</text>
+
+    <rect x="650" y="290" width="60" height="30" rx="5" fill="#6ba" stroke="#487" stroke-width="1.5" />
+    <text x="680" y="275" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle">PIP3</text>
+  </g>
+
+  
+  <g id="akt_kinase" data-role="kinase">
+    <use href="#kinase" x="650" y="340" width="80" height="50" />
+    <text x="690" y="410" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle">AKT</text>
+    <use href="#p_badge" x="700" y="320" width="24" height="24" />
+  </g>
+
+  
+  <g id="downstream_targets" data-role="protein">
+    <use href="#generic_protein" x="850" y="340" width="80" height="50" />
+    <text x="910" y="410" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle">Downstream Targets</text>
+    <use href="#p_badge" x="920" y="320" width="24" height="24" />
+  </g>
+
+  
+  <g id="glucose_uptake_process" data-role="process">
+    <text x="1100" y="410" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle">Glucose Uptake</text>
+  </g>
+
+  
+  <g id="pathway_arrows" data-role="arrows">
+    
+    <path d="M 200 180 V 210" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <path d="M 200 310 V 340" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <path d="M 230 365 H 350" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <path d="M 400 340 V 315 H 500" fill="none" stroke="#333" stroke-width="2" />
+    <path d="M 560 305 H 650" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <path d="M 680 320 V 340" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <path d="M 730 365 H 850" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <path d="M 930 365 H 1050" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  </g>
+</svg>

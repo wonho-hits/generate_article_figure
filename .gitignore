@@ -45,7 +45,7 @@ flagged/
 *.swo
 
 # Claude Code local settings (not shared); keep CLAUDE.md (project context)
-.claude/settings.local.json
+.claude/
 
 # OS
 .DS_Store

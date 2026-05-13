@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900"><defs>
+<symbol id="transcription_factor" viewBox="0 0 60 50" overflow="visible">
+        
+        <path d="M 10 30 Q 10 6 30 6 Q 50 6 50 30 Z" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" stroke-linejoin="round" />
+        
+        <line x1="17" y1="30" x2="17" y2="42" stroke="#4A7A3F" stroke-width="2.5" stroke-linecap="round" />
+        <line x1="43" y1="30" x2="43" y2="42" stroke="#4A7A3F" stroke-width="2.5" stroke-linecap="round" />
+        
+        <path d="M 2 45 Q 12 41 22 45 T 42 45 Q 52 41 58 45" fill="none" stroke="#888888" stroke-width="1.5" />
+        <path d="M 2 48 Q 12 52 22 48 T 42 48 Q 52 52 58 48" fill="none" stroke="#888888" stroke-width="1.5" />
+    </symbol>
+<symbol id="mitochondrion" viewBox="0 0 150 80" overflow="visible">
+        <ellipse cx="75" cy="40" rx="70" ry="35" fill="#F5D4C5" stroke="#8B4A2A" stroke-width="2.5" />
+        <path d="M 30 26 Q 40 36 50 26 Q 60 16 70 26" fill="none" stroke="#8B4A2A" stroke-width="1.5" />
+        <path d="M 30 54 Q 40 44 50 54 Q 60 64 70 54" fill="none" stroke="#8B4A2A" stroke-width="1.5" />
+        <path d="M 80 26 Q 90 36 100 26 Q 110 16 120 26" fill="none" stroke="#8B4A2A" stroke-width="1.5" />
+        <path d="M 80 54 Q 90 44 100 54 Q 110 64 120 54" fill="none" stroke="#8B4A2A" stroke-width="1.5" />
+    </symbol>
+<symbol id="caspase" viewBox="0 0 72 52" overflow="visible">
+        
+        <ellipse cx="26" cy="26" rx="22" ry="18" fill="#C5A8E2" stroke="#5F3A8C" stroke-width="2" />
+        <ellipse cx="58" cy="26" rx="13" ry="11" fill="#D8BCE8" stroke="#5F3A8C" stroke-width="2" />
+        
+        <path d="M 42 14 Q 47 26 42 38" fill="none" stroke="#3F2A5C" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3,2" />
+        
+        <text x="26" y="30" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#3F2A5C" font-weight="bold">Cys</text>
+    </symbol>
+</defs>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+    <filter id="stage_shadow" x="-5%" y="-5%" width="115%" height="125%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <g id="figure_title">
+    <text x="800" y="40" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="bold" fill="#1a1a1a" text-anchor="middle">Intrinsic (Mitochondrial) Apoptosis Pathway</text>
+  </g>
+
+  <g id="cellular_stress_initiator">
+    <rect x="100" y="80" width="220" height="60" rx="10" fill="#E8EEF7" stroke="#3A5F7F" stroke-width="2" filter="url(#stage_shadow)" />
+    <text x="210" y="110" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="bold" fill="#3A5F7F" text-anchor="middle">Cellular Stress</text>
+    <text x="210" y="135" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#3A5F7F" text-anchor="middle">(DNA damage, ROS)</text>
+  </g>
+
+  <g id="p53_activation">
+    <line x1="210" y1="140" x2="210" y2="180" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <use href="#transcription_factor" x="180" y="180" width="60" height="50" />
+    <text x="210" y="245" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#1a1a1a" text-anchor="middle">p53</text>
+  </g>
+
+  <g id="bcl2_induction">
+    <line x1="210" y1="230" x2="210" y2="280" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <rect x="100" y="280" width="220" height="70" rx="10" fill="#E8F2E0" stroke="#4A7A3F" stroke-width="2" filter="url(#stage_shadow)" />
+    <text x="210" y="310" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="bold" fill="#4A7A3F" text-anchor="middle">Pro-apoptotic Bcl-2</text>
+    <text x="210" y="335" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#4A7A3F" text-anchor="middle">Family Proteins</text>
+  </g>
+
+  <g id="mitochondrion_momp">
+    <line x1="320" y1="315" x2="700" y2="315" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <text x="510" y="300" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#333" text-anchor="middle">Induces</text>
+    <use href="#mitochondrion" x="700" y="280" width="150" height="80" />
+    <ellipse cx="775" cy="320" rx="73" ry="38" fill="none" stroke="red" stroke-dasharray="8 4" stroke-width="2" />
+    <text x="775" y="380" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="red" text-anchor="middle">MOMP</text>
+    <text x="775" y="400" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="red" text-anchor="middle">(Outer Membrane Permeabilization)</text>
+  </g>
+
+  <g id="cytochrome_c_release">
+    <text x="600" y="500" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" fill="#555" text-anchor="start">Cytoplasm</text>
+    <circle cx="775" cy="450" r="15" fill="#C44E52" />
+    <text x="775" y="475" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#C44E52" text-anchor="middle">Cytochrome c</text>
+    <path d="M 775 360 C 775 400, 775 420, 775 425" fill="none" stroke="#C44E52" stroke-width="2.5" marker-end="url(#arrowhead)" />
+  </g>
+
+  <g id="caspase_cascade">
+    <path d="M 775 475 C 700 500, 600 500, 400 550" fill="none" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <use href="#caspase" x="364" y="550" width="72" height="52" />
+    <text x="400" y="620" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#1a1a1a" text-anchor="middle">Caspase-9</text>
+
+    <line x1="400" y1="602" x2="400" y2="660" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <use href="#caspase" x="364" y="660" width="72" height="52" />
+    <text x="400" y="730" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#1a1a1a" text-anchor="middle">Caspase-3</text>
+  </g>
+
+  <g id="cell_death_outcome">
+    <line x1="400" y1="712" x2="400" y2="760" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <rect x="290" y="760" width="220" height="50" rx="10" fill="#FFDDD5" stroke="#9C4A47" stroke-width="2" filter="url(#stage_shadow)" />
+    <text x="400" y="790" font-family="Helvetica, Arial, sans-serif" font-size="16" font-weight="bold" fill="#9C4A47" text-anchor="middle">Cleavage of Substrates</text>
+
+    <line x1="400" y1="810" x2="400" y2="850" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <rect x="290" y="850" width="220" height="50" rx="10" fill="#EEDDF2" stroke="#7F4A9C" stroke-width="2" filter="url(#stage_shadow)" />
+    <text x="400" y="880" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#7F4A9C" text-anchor="middle">Cell Death</text>
+  </g>
+
+</svg>

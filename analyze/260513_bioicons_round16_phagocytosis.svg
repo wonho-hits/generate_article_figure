@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 650">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333333" />
+    </marker>
+    <filter id="stage_shadow" x="-5%" y="-5%" width="115%" height="125%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  
+  <text x="900" y="45" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="bold" fill="#1a1a1a" text-anchor="middle">Macrophage Phagocytosis of a Bacterium</text>
+
+  
+  
+
+  
+  <g id="stage_recognition" data-role="stage">
+    <rect x="100" y="100" width="250" height="400" rx="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1" />
+    <g id="macrophage_recognition">
+      <path d="M150,250 C100,200 100,400 150,350 C200,400 300,400 300,350 C350,400 350,200 300,250 C250,200 200,200 150,250 Z" fill="#E0F2F7" stroke="#3A5F7F" stroke-width="2" filter="url(#stage_shadow)" />
+      <g id="bacterium_1">
+        <rect x="300" y="270" width="80" height="40" rx="15" ry="15" fill="#e74c3c" stroke="#c0392b" stroke-width="1.5" />
+        <text x="340" y="297" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="white" text-anchor="middle">Bacterium</text>
+      </g>
+    </g>
+    <text x="225" y="550" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" fill="#3A5F7F" text-anchor="middle">1. Recognition</text>
+  </g>
+
+  
+  <line x1="360" y1="300" x2="490" y2="300" stroke="#333333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+
+  
+  <g id="stage_engulfment" data-role="stage">
+    <rect x="450" y="100" width="250" height="400" rx="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1" />
+    <g id="macrophage_engulfment">
+      <path d="M500,250 C450,200 450,400 500,350 C550,400 650,400 650,350 C700,400 700,200 650,250 C600,200 550,200 500,250 Z" fill="#E0F2F7" stroke="#3A5F7F" stroke-width="2" filter="url(#stage_shadow)" />
+      <path d="M600,280 C620,260 630,280 630,300 C630,320 620,340 600,320 L580,300 L600,280 Z" fill="#E0F2F7" stroke="#3A5F7F" stroke-width="2" /> 
+      <path d="M600,320 C620,340 630,320 630,300 C630,280 620,260 600,280 L580,300 L600,320 Z" fill="#E0F2F7" stroke="#3A5F7F" stroke-width="2" /> 
+      <g id="bacterium_2">
+        <rect x="580" y="270" width="80" height="40" rx="15" ry="15" fill="#e74c3c" stroke="#c0392b" stroke-width="1.5" />
+        <text x="620" y="297" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="white" text-anchor="middle">Bacterium</text>
+      </g>
+    </g>
+    <text x="575" y="550" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" fill="#3A5F7F" text-anchor="middle">2. Engulfment</text>
+  </g>
+
+  
+  <line x1="710" y1="300" x2="840" y2="300" stroke="#333333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+
+  
+  <g id="stage_phagosome_formation" data-role="stage">
+    <rect x="800" y="100" width="250" height="400" rx="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1" />
+    <g id="macrophage_phagosome">
+      <path d="M850,250 C800,200 800,400 850,350 C900,400 1000,400 1000,350 C1050,400 1050,200 1000,250 C950,200 900,200 850,250 Z" fill="#E0F2F7" stroke="#3A5F7F" stroke-width="2" filter="url(#stage_shadow)" />
+      <g id="phagosome">
+        <circle cx="920" cy="300" r="55" fill="none" stroke="#3A5F7F" stroke-width="2" />
+        <g id="bacterium_3">
+          <rect x="880" y="280" width="80" height="40" rx="15" ry="15" fill="#e74c3c" stroke="#c0392b" stroke-width="1.5" />
+          <text x="920" y="307" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="white" text-anchor="middle">Bacterium</text>
+        </g>
+      </g>
+    </g>
+    <text x="925" y="550" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" fill="#3A5F7F" text-anchor="middle">3. Phagosome Formation</text>
+  </g>
+
+  
+  <line x1="1060" y1="300" x2="1190" y2="300" stroke="#333333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+
+  
+  <g id="stage_phagolysosome_maturation" data-role="stage">
+    <rect x="1150" y="100" width="250" height="400" rx="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1" />
+    <g id="macrophage_phagolysosome_maturation">
+      <path d="M1200,250 C1150,200 1150,400 1200,350 C1250,400 1350,400 1350,350 C1400,400 1400,200 1350,250 C1300,200 1250,200 1200,250 Z" fill="#E0F2F7" stroke="#3A5F7F" stroke-width="2" filter="url(#stage_shadow)" />
+      <g id="phagolysosome">
+        <circle cx="1270" cy="300" r="65" fill="#e8e2f2" stroke="#7F4A9C" stroke-width="2" />
+        <g id="bacterium_4">
+          <rect x="1235" y="280" width="70" height="35" rx="15" ry="15" fill="#e74c3c" stroke="#c0392b" stroke-width="1.5" />
+          <text x="1270" y="304" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="white" text-anchor="middle">Bacterium</text>
+        </g>
+      </g>
+      <g id="lysosome">
+        <circle cx="1200" cy="220" r="30" fill="#DDA0DD" stroke="#800080" stroke-width="1.5" />
+        <text x="1200" y="225" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="white" text-anchor="middle">Lyso</text>
+      </g>
+      <line x1="1220" y1="235" x2="1230" y2="255" stroke="#7F4A9C" stroke-width="1.5" marker-end="url(#arrowhead)" />
+      <text x="1330" y="225" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#666666" text-anchor="middle">Acidic Enzymes</text>
+      <circle cx="1320" cy="270" r="4" fill="#666666" />
+      <circle cx="1300" cy="330" r="4" fill="#666666" />
+      <circle cx="1250" cy="250" r="4" fill="#666666" />
+    </g>
+    <text x="1275" y="550" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" fill="#7F4A9C" text-anchor="middle">4. Phagolysosome Maturation</text>
+  </g>
+
+  
+  <line x1="1410" y1="300" x2="1540" y2="300" stroke="#333333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+
+  
+  <g id="stage_degradation" data-role="stage">
+    <rect x="1500" y="100" width="250" height="400" rx="20" fill="#f0f0f0" stroke="#ccc" stroke-width="1" />
+    <g id="macrophage_degradation">
+      <path d="M1550,250 C1500,200 1500,400 1550,350 C1600,400 1700,400 1700,350 C1750,400 1750,200 1700,250 C1650,200 1600,200 1550,250 Z" fill="#E0F2F7" stroke="#3A5F7F" stroke-width="2" filter="url(#stage_shadow)" />
+      <g id="digested_phagolysosome">
+        <circle cx="1620" cy="300" r="65" fill="#e8e2f2" stroke="#7F4A9C" stroke-width="2" />
+        <text x="1620" y="305" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#666666" text-anchor="middle">Digested contents</text>
+        <circle cx="1580" cy="270" r="8" fill="#a0a0a0" />
+        <path d="M1650,290 L1660,310 L1640,320 Z" fill="#a0a0a0" />
+        <rect x="1600" y="320" width="20" height="15" fill="#a0a0a0" />
+        <path d="M1630,260 C1640,250 1650,270 1630,280 C1620,275 1610,265 1630,260 Z" fill="#a0a0a0" />
+      </g>
+    </g>
+    <text x="1625" y="550" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" fill="#7F4A9C" text-anchor="middle">5. Degradation</text>
+  </g>
+
+</svg>

@@ -45,6 +45,36 @@ LAYOUT (this is where most figures fail — read carefully)
 - Truncated text is FORBIDDEN. If a label doesn't fit, widen the viewBox or place the label outside its container.
 - Maintain ≥ 30px clearance between bounding boxes of unrelated groups.
 - Arrow paths must NOT cross any text label. Route around with bezier curves if needed.
+- CASCADE DENSITY RULE: when a signaling cascade has ≥ 5 sequential steps,
+  do NOT lay them out in a single horizontal row — labels collide and
+  text gets clipped. Choose one of:
+  * VERTICAL CASCADE: stack steps top-to-bottom, arrows pointing down.
+    Best for most signaling figures (membrane top → nucleus bottom).
+  * MULTI-ROW LAYOUT: split into 2 rows with a U-turn arrow at the
+    midpoint. Each row should have ≤ 4 steps.
+  Insulin/AKT/PI3K-type cascades (6+ steps) are the common offender —
+  always go vertical or 2-row for these.
+
+  CONCRETE TEMPLATE for a 6-7 step vertical cascade — use these
+  coordinates as a starting point and adjust as needed:
+    viewBox = "0 0 800 1400"  (NOT 1600x900 — that's too short)
+    Membrane lines at y=200, y=220
+    Step 1 (ligand):    centred at (400, 100), above the membrane
+    Step 2 (receptor):  centred at (400, 215), straddling membrane
+    Step 3 (kinase 1):  centred at (400, 360), in cytoplasm
+    Step 4 (kinase 2):  centred at (400, 530)
+    Step 5 (kinase 3):  centred at (400, 700)
+    Step 6 (output):    centred at (400, 870)
+    Step 7 (nucleus/gene): centred at (400, 1050)
+    Title at top:       (400, 50), text-anchor=middle, font-size=22
+    "Extracellular" label at (60, 130), font-size=14 fill=#666
+    "Cytoplasm" label at (60, 280), font-size=14 fill=#666
+  Each step gets ~150-170 px of vertical space. Arrow between adjacent
+  steps spans the gap (e.g. step 2 bottom at y≈260 to step 3 top at y≈320).
+  Label each step to the RIGHT of its icon (e.g. label of step 3 at
+  x=460, y=365) so labels don't collide with the next step's icon.
+  Pad the viewBox left margin to ≥ 50 px so compartment labels
+  ("Extracellular", "Cytoplasm") aren't clipped at x=0.
 - For figures with extracellular / intracellular regions:
   * Convention: EXTRACELLULAR is at the TOP of the canvas, INTRACELLULAR (cytoplasm) is BELOW the membrane.
   * Draw the cell membrane as TWO thin horizontal parallel lines spanning the figure width (e.g., y=380 and y=400, stroke="#888" stroke-width="2"). The 20px gap = the bilayer thickness. DO NOT use the `lipid_bilayer` symbol for figure-spanning membranes — it scales weirdly. Reserve `lipid_bilayer` for short close-ups (< 200px wide) where you want the head/tail anatomy visible.
@@ -137,6 +167,257 @@ tree). For these, follow this recipe to avoid boring grey-box output:
     Don't force these — add only when the data exists and is industry-standard.
 
 15. **Icon stroke consistency**: library symbols handle their own strokes. If you draw custom icon-like elements, use stroke-width="1.5" uniformly. Mixing 1px and 2.5px strokes across icons makes the figure look like a Frankenstein of styles.
+
+CELL-DIVISION, GENETICS & EARLY DEVELOPMENT (bundled bioicons_* symbols)
+The `bioicons_*` symbols are detail-rich publication-style biological
+illustrations imported from bioicons.com. When the user asks for figures
+involving mitosis/meiosis, sister chromatids, karyotypes, fertilisation,
+or early embryo development — REACH FOR THESE FIRST instead of drawing
+cells from primitives.
+
+Servier line-art set (CC BY 3.0, pink/pastel aesthetic):
+- `bioicons_mitosis` (380×440) — full mitosis cycle (interphase → prophase
+  → metaphase → anaphase → telophase) as one composite icon. A single
+  <use href="#bioicons_mitosis"/> produces the whole diagram; add your
+  own <text> labels around it pointing to each stage.
+- `bioicons_meiosis` (574×347) — full meiosis cycle, 8 stages including
+  both divisions. Wider aspect than mitosis. Use for meiosis-specific
+  figures or side-by-side mitosis vs meiosis comparisons.
+- `bioicons_chromosome` (100×130) — single X-shaped condensed chromosome.
+  No baked-in text — overlay <text> for allele / gene / locus names.
+
+Xi-Chen early-development set (CC0, photorealistic look — white outer
+cell with blue zona pellucida and mauve nuclei). Full sequence:
+- `bioicons_sperm` (167×31, long horizontal) — sperm with elongated
+  tail. Place pointing right toward an egg / zygote in fertilisation
+  panels.
+- `bioicons_zygote` (64×64) — fertilised egg / 1-cell embryo with two
+  visible pronuclei (paternal + maternal) inside zona pellucida.
+- `bioicons_embryo_2cell` (64×64) — 2-cell stage (first cleavage).
+- `bioicons_embryo_morula` (64×64) — morula (~16-cell packed cluster).
+- `bioicons_embryo_blastocyst` (64×64) — early blastocyst with
+  blastocoel cavity and inner cell mass.
+
+Standard fertilisation-to-implantation sequence (5-panel figure):
+  sperm → zygote → 2-cell → morula → blastocyst
+  Arrow between each panel. Title above. Label each panel below.
+
+Aesthetic compatibility: Servier and Xi-Chen icons have different visual
+styles (line-art vs photorealistic). If your figure uses both, group them
+into separate panels rather than placing them adjacent in the same row.
+If your figure also has hand-written symbols (gpcr / kinase / etc.) and
+the contrast feels jarring, restrict bioicons usage to a dedicated panel
+rather than mixing them in the same group.
+
+PER-STAGE MITOSIS / MEIOSIS ICONS (use for stage-labelled figures!)
+For figures where the user wants INDIVIDUAL cell-cycle stages each
+labelled by name, USE THESE PER-STAGE WRAPPERS rather than the composite
+icons. Place one `<use href="#bioicons_mitosis_<stage>"/>` per panel
+with its `<text>` stage-name label directly beneath. Using the composite
+and overlaying labels at guessed positions produces misaligned labels
+(verified failure mode).
+
+Mitosis stages (6):
+  bioicons_mitosis_interphase   (145×105)
+  bioicons_mitosis_prophase     (160×110)
+  bioicons_mitosis_prometaphase (165×110)
+  bioicons_mitosis_metaphase    (160×105)
+  bioicons_mitosis_anaphase     (125×95)
+  bioicons_mitosis_telophase    (175×110)
+
+Meiosis stages (8 — same idea, two divisions):
+  bioicons_meiosis_prophase_i   (210×210)  — homologs pair, tetrads form
+  bioicons_meiosis_metaphase_i  (175×210)  — tetrads at the plate
+  bioicons_meiosis_anaphase_i   (135×125)  — homologs to opposite poles
+                                              (sister chromatids stay paired)
+  bioicons_meiosis_telophase_i  (135×130)  — 2 cells with half chromosomes each
+  bioicons_meiosis_prophase_ii  (95×85)
+  bioicons_meiosis_metaphase_ii (95×80)
+  bioicons_meiosis_anaphase_ii  (95×75)
+  bioicons_meiosis_telophase_ii (95×75)    — 1 of 4 haploid gametes
+
+The mitosis per-stage icons all share the same aspect ratio
+(~1.4–1.7). The meiosis Meiosis-I stages are bigger ovals than the
+Meiosis-II stages — preserve their natural sizes when laying them out
+(the Meiosis II stages should look smaller than Meiosis I in a row).
+A common figure layout: 2 rows × 4 columns showing all 8 meiosis stages.
+
+SIGNALING PATHWAY EXTENSIONS (hand-written, beyond the receptor / kinase set)
+The three `signaling`-category symbols fill specific roles that the generic
+gpcr / rtk / kinase / phosphatase / generic_protein shapes cannot convey
+cleanly:
+- `transcription_factor` (60×50) — saddle-shaped DNA-binding protein over
+  a short double-helix line. Use at the END of a signaling cascade where
+  the pathway terminates at gene expression. Place INSIDE the nucleus (so
+  it visually sits on chromatin); add a `<text>` for the TF name above
+  (NF-κB, STAT, FOXO, p53, etc.).
+- `scaffold_protein` (130×32) — elongated multi-domain backbone with 4
+  coloured binding pockets. Use for scaffolds (KSR for MAPK, JIP, Ste5,
+  AKAP) that tether multiple signalling partners. Position other proteins
+  (kinase, phosphatase) ON or NEXT TO it to convey "bound" relationships.
+- `small_gtpase` (52×48) — triangular GTPase body with a bound-nucleotide
+  circle marked 'T' (GTP, active). Use for Ras-family proteins: Ras, RhoA,
+  Rac1, Cdc42, Rab, Ran. Add a `<text>` for the specific GTPase name above.
+  For the inactive GDP form, overlay a `<text>D</text>` over the bound-
+  nucleotide circle at the same coordinates.
+
+Composition pattern for signaling-cascade figures: ligand → receptor (gpcr
+/ rtk) → adapter/scaffold → kinase cascade → small_gtpase or second
+messenger (ip3 / dag / camp / ion[Ca²⁺]) → kinase → transcription_factor
+in nucleus → labelled gene. Arrows with arrow-marker between each step.
+
+LIGAND + GPCR / G-PROTEIN PATTERN
+For figures depicting ligand binding and G-protein activation:
+- `ligand` (40×30) — generic peach clover-shape. Place ~10-20 px ABOVE
+  the receptor head on the extracellular side. Add a `<text>` for the
+  specific ligand name (e.g. "EGF", "VEGF", "GPCR agonist", "insulin").
+- `g_protein_trimer` (90×60) — Gα + Gβ + Gγ trio with subunit labels
+  baked in. Place INSIDE the cytoplasm directly below a GPCR. After
+  ligand binding, you'll typically dissociate the α from the βγ to
+  represent activation — draw two separate ovals if you want to show
+  the activated state, otherwise use this composite trimer for the
+  resting / pre-activation state.
+
+RICH ECM COMPOSITION (beyond just collagen)
+The matrix contains MULTIPLE protein species. For a realistic ECM
+panel, mix several of these in the matrix region:
+- `bioicons_collagen` — the fibrillar backbone (most abundant).
+- `fibronectin` (180×70) — V-shaped dimer with an RGD loop. Position
+  bridging between integrin and collagen to show its adhesive role.
+- `laminin` (120×120) — cross-shape with 3 short + 1 long arm. Use in
+  basement-membrane figures; the long arm engages integrin/dystroglycan
+  on the cell side.
+- `proteoglycan` (200×90) — bottle-brush with many GAG side-chains.
+  Use for tissue hydration / growth-factor sequestration figures.
+
+For basement-membrane figures specifically: place laminin sheets
+horizontally just above the cell, with collagen IV below, and
+proteoglycans scattered. For interstitial matrix: mix collagen +
+fibronectin + proteoglycan in a more open pattern.
+
+CELL-CELL ADHESION (cadherin) — distinct from cell-matrix (integrin)
+The `cadherin` symbol (32×96) depicts a single transmembrane chain with
+5 extracellular EC domains. Use for adherens-junction figures, EMT
+(epithelial-mesenchymal transition), neural development, tissue
+morphogenesis.
+
+Pattern for adherens junctions:
+1. Draw 2 cell membranes facing each other (2 pairs of horizontal lines,
+   ~150-250 px apart vertically; an intercellular space between them).
+2. Place cadherin `<use>` on each membrane, oriented so the EC domains
+   meet at the centre of the intercellular space.
+3. To depict homophilic binding, MIRROR the second cadherin by flipping
+   its y axis via `transform="translate(x, y_bottom) scale(1, -1)"` so
+   the EC1 head points "up" from the lower cell to meet EC1 of the
+   upper cadherin.
+4. Optional: from each cadherin's cytoplasmic tail draw a connector to a
+   small `<text>` "β-catenin" or to a `bioicons_actin_filament`.
+
+MATRIX REMODELLING (MMP) — protease that cleaves ECM
+The `mmp` symbol (50×50, Pac-Man with a yellow Zn²⁺ active site) is the
+canonical matrix metalloproteinase shape. Use for:
+- wound healing
+- cancer cell invasion / metastasis
+- basement-membrane degradation
+- tissue remodelling during development
+
+Pattern for MMP-cleaved matrix: place the MMP icon adjacent to a
+collagen / fibronectin fibre with its mouth opening toward the fibre.
+INSERT A SMALL GAP in the fibre at the MMP mouth position (draw two
+short collagen segments instead of one continuous fibre) to depict the
+proteolytic cut. Add a small `<text>` label "MMP-9" or similar above
+the icon for the specific MMP. Optional curved arrow from the MMP
+indicating its movement / activity.
+
+APOPTOSIS CASCADE (caspase)
+The `caspase` symbol (72×52, purple heterodimer with active-site cleft)
+distinguishes initiator caspases (caspase-8/9, upstream) from executioner
+caspases (caspase-3/7, downstream). Pattern: chain 2-3 caspase icons in
+sequence with cleavage arrows ("→ activates"), label each with its
+number ("Caspase-9", "Caspase-3"). The final caspase typically points
+to a labelled substrate ("PARP", "DNA fragmentation", "Bcl-2") drawn
+as a `generic_protein` with the substrate name.
+
+VESICLE TRAFFICKING & TRANSLATION
+- `bioicons_endocytosis` (238×222) — cell-membrane closeup showing
+  extracellular cargo (orange particles) being engulfed into a budding
+  vesicle. Use for receptor-mediated endocytosis, ligand internalisation,
+  viral entry. Place adjacent to a receptor (gpcr/rtk) to depict the
+  internalisation step; the cargo can represent the ligand+receptor
+  complex.
+- `bioicons_ribosome` (642×426) — pink ribosome with labeled subunits
+  translating mRNA. Use for protein-synthesis figures or to depict the
+  endpoint of a transcription-translation cascade (after the TF
+  activates the gene). Long aspect ratio — fits a horizontal strip in
+  the cytoplasm.
+
+CELL-BM ANCHORING (hemidesmosome + basement_membrane)
+The `hemidesmosome` symbol (100×92) depicts the cell ↔ basement-membrane
+junction: cytoplasmic intermediate filaments → plaque → α6β4 integrin
+transmembrane pillars → basement membrane below. The `basement_membrane`
+symbol (200×28) is a standalone double-layer peach sheet (lamina lucida
++ lamina densa) suitable for figures showing the BM as a continuous
+surface beneath epithelial cells. Often used together — place
+`basement_membrane` as a wide horizontal band, then anchor individual
+cells above it with `hemidesmosome` punctate junctions.
+
+ECM / TISSUE FIGURES (bundled bioicons_* symbols)
+Use these for figures involving the extracellular matrix, cell-cell
+adhesion, or tissue architecture:
+- `bioicons_collagen` (528×67) — horizontal triple-helix collagen fibre.
+  Tile horizontally for a longer fibre or stack vertically (small y-gaps,
+  e.g. 20px) for a parallel-fibre bundle.
+- `bioicons_collagen_3d` (120×487) — upright 3D braided collagen. Use
+  for close-ups or when a vertical orientation fits the layout.
+- `bioicons_fibroblast` (363×122) — stellate fibroblast cell. The
+  dominant ECM-producing cell; use in wound-healing, fibrosis, and
+  matrix-deposition figures.
+- `bioicons_tight_junction` (316×539) — 2 epithelial cells with tight-
+  junction strands. Use for barrier-function figures, paracellular
+  transport, epithelial polarity.
+- `bioicons_desmosome` (708×503) — 3 cells with spot-desmosome
+  attachments. Use for skin / cardiac tissue cell-cell adhesion.
+
+ECM composition pattern: place fibroblast(s) on one side, multiple
+horizontal collagen fibres filling the matrix region, and (optionally) a
+target cell on the opposite side. Label the matrix area with a `<text>`
+caption like "ECM" or "Basement membrane" placed in the whitespace
+between collagen fibres.
+
+ONCOLOGY — cancer cells & tumors
+For invasion / metastasis / tumor-microenvironment figures, USE THESE
+INSTEAD of `generic_protein` labelled "Tumor cell":
+- `bioicons_cancer_cell` (143×156) — single cancer cell with irregular
+  orange cytoplasm and a visible chromatin-filled nucleus.
+- `bioicons_tumor` (97×95) — tumor-mass cross-section (yellow tissue
+  with pink outer rim).
+
+Typical invasion figure: place ONE `bioicons_cancer_cell` at the left/
+top of the matrix region (alongside `bioicons_collagen` and `mmp`),
+add a "Migration →" arrow indicating direction of invasion. For
+tumor-microenvironment figures, use `bioicons_tumor` as the central
+mass surrounded by fibroblasts and ECM.
+
+INTEGRIN + CYTOSKELETON BRIDGE (ECM ↔ cell)
+The `integrin` symbol (hand-written, αβ heterodimer) is the natural
+receptor that bridges the ECM to the cell. For figures showing how a
+cell senses its matrix:
+1. Draw the membrane as 2 horizontal lines (per the LAYOUT rules).
+2. Place `<use href="#integrin"/>` straddling the membrane — α/β heads
+   protrude into the EXTRACELLULAR (top) compartment; cytoplasmic tails
+   point INTRACELLULAR (bottom).
+3. Above the integrin (extracellular side), place an ECM ligand:
+   `bioicons_collagen` or `bioicons_collagen_3d` close to the α/β heads.
+4. Below the integrin (cytoplasmic side), connect to `bioicons_actin_filament`
+   to indicate cytoskeletal coupling. A small `<text>` label "talin/vinculin"
+   on the linker line is conventional but optional.
+5. Optional downstream signaling: from the cytoplasmic tails, draw an
+   arrow to a `kinase` (FAK) and further to `small_gtpase` (Rho-family)
+   to represent outside-in signaling.
+
+The `bioicons_microtubule` symbol (blue tubulin lattice) is parallel —
+use for cellular-transport figures, mitotic spindle close-ups, or
+ciliary axoneme schematics. Not part of the ECM bridge pattern.
 
 TYPOGRAPHY
 - font-family="Helvetica, Arial, sans-serif"

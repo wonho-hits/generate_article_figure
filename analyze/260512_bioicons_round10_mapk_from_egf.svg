@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 900"><defs>
+<symbol id="transcription_factor" viewBox="0 0 60 50" overflow="visible">
+        
+        <path d="M 10 30 Q 10 6 30 6 Q 50 6 50 30 Z" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" stroke-linejoin="round" />
+        
+        <line x1="17" y1="30" x2="17" y2="42" stroke="#4A7A3F" stroke-width="2.5" stroke-linecap="round" />
+        <line x1="43" y1="30" x2="43" y2="42" stroke="#4A7A3F" stroke-width="2.5" stroke-linecap="round" />
+        
+        <path d="M 2 45 Q 12 41 22 45 T 42 45 Q 52 41 58 45" fill="none" stroke="#888888" stroke-width="1.5" />
+        <path d="M 2 48 Q 12 52 22 48 T 42 48 Q 52 52 58 48" fill="none" stroke="#888888" stroke-width="1.5" />
+    </symbol>
+<symbol id="nucleus" viewBox="0 0 200 150" overflow="visible">
+        <ellipse cx="100" cy="75" rx="92" ry="65" fill="#F0E0F0" stroke="#5A2A7C" stroke-width="2.5" />
+        <ellipse cx="100" cy="75" rx="86" ry="60" fill="none" stroke="#5A2A7C" stroke-width="1" opacity="0.6" />
+        <circle cx="20" cy="60" r="3" fill="#5A2A7C" />
+        <circle cx="180" cy="65" r="3" fill="#5A2A7C" />
+        <circle cx="100" cy="12" r="3" fill="#5A2A7C" />
+        <circle cx="100" cy="138" r="3" fill="#5A2A7C" />
+    </symbol>
+<symbol id="kinase" viewBox="0 0 80 50" overflow="visible">
+        <ellipse cx="40" cy="25" rx="35" ry="20" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" />
+    </symbol>
+<symbol id="p_badge" viewBox="0 0 24 24" overflow="visible">
+        <circle cx="12" cy="12" r="10" fill="#FF6B47" stroke="#A33020" stroke-width="1.5" />
+        <text x="12" y="16" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="white" font-weight="bold">P</text>
+    </symbol>
+<symbol id="ligand" viewBox="0 0 40 30" overflow="visible">
+        
+        <path d="M 20 5 Q 8 5 8 15 Q 8 25 20 25 Q 32 25 32 15 Q 32 5 20 5 Z" fill="#FFD8B0" stroke="#C86B1F" stroke-width="1.8" stroke-linejoin="round" />
+        
+        <circle cx="14" cy="13" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+        <circle cx="26" cy="17" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+    </symbol>
+<symbol id="rtk" viewBox="0 0 60 100" overflow="visible">
+        <rect x="10" y="5" width="40" height="32" rx="4" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2" />
+        <rect x="22" y="37" width="16" height="22" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2" />
+        <ellipse cx="30" cy="78" rx="22" ry="16" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" />
+        <text x="30" y="83" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#4A7A3F" font-weight="bold">K</text>
+    </symbol>
+<symbol id="small_gtpase" viewBox="0 0 52 48" overflow="visible">
+        
+        <path d="M 26 4 L 46 36 Q 26 46 6 36 Z" fill="#C5B5D4" stroke="#5F4A7F" stroke-width="2" stroke-linejoin="round" />
+        
+        <circle cx="36" cy="24" r="7" fill="#FFE8B0" stroke="#C8901F" stroke-width="1.5" />
+        <text x="36" y="27" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="8" fill="#C8901F" font-weight="bold">T</text>
+    </symbol>
+</defs>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+    </marker>
+  </defs>
+
+  
+  <g id="compartment_labels">
+    <text id="extracellular_label" x="900" y="100" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a" text-anchor="middle">Extracellular</text>
+    <text id="cytoplasm_label" x="900" y="500" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a" text-anchor="middle">Cytoplasm</text>
+    <text id="nucleus_text_label" x="600" y="600" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a" text-anchor="middle">Nucleus</text>
+  </g>
+
+  
+  <g id="cell_membrane">
+    <line x1="0" y1="380" x2="1800" y2="380" stroke="#888" stroke-width="2" />
+    <line x1="0" y1="400" x2="1800" y2="400" stroke="#888" stroke-width="2" />
+  </g>
+
+  
+  <g id="extracellular_egf">
+    <use href="#ligand" x="280" y="235" width="40" height="30" />
+    <text x="300" y="200" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">EGF</text>
+  </g>
+
+  
+  <g id="membrane_egfr">
+    <use href="#rtk" x="270" y="330" width="60" height="100" />
+    <text x="300" y="300" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">EGFR</text>
+    <use href="#p_badge" x="310" y="415" />
+  </g>
+
+  
+  <g id="cytoplasmic_ras">
+    <use href="#small_gtpase" x="274" y="480" width="52" height="48" />
+    <text x="300" y="450" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">Ras</text>
+  </g>
+
+  <g id="cytoplasmic_raf">
+    <use href="#kinase" x="510" y="480" width="80" height="50" />
+    <text x="550" y="450" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">Raf</text>
+    <use href="#p_badge" x="580" y="470" />
+  </g>
+
+  <g id="cytoplasmic_mek">
+    <use href="#kinase" x="760" y="480" width="80" height="50" />
+    <text x="800" y="450" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">MEK</text>
+    <use href="#p_badge" x="830" y="470" />
+  </g>
+
+  <g id="cytoplasmic_erk">
+    <use href="#kinase" x="1010" y="480" width="80" height="50" />
+    <text x="1050" y="450" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">ERK</text>
+    <use href="#p_badge" x="1080" y="470" />
+  </g>
+
+  
+  <g id="nucleus_compartment">
+    <use href="#nucleus" x="400" y="570" width="400" height="300" />
+    <g id="nuclear_erk">
+      <use href="#kinase" x="500" y="690" width="80" height="50" />
+      <text x="540" y="660" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">ERK</text>
+    </g>
+    <g id="nuclear_transcription_factor">
+      <use href="#transcription_factor" x="680" y="690" width="60" height="50" />
+      <text x="710" y="660" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">TF</text>
+      <use href="#p_badge" x="730" y="680" />
+    </g>
+    <g id="gene_expression">
+      <path d="M650 770 C655 765, 665 765, 670 770 S680 775, 685 770 S695 765, 700 770" fill="none" stroke="#555" stroke-width="2" />
+      <path d="M650 775 C655 770, 665 770, 670 775 S680 780, 685 775 S695 770, 700 775" fill="none" stroke="#555" stroke-width="2" />
+      <line x1="660" y1="772.5" x2="660" y2="777.5" stroke="#555" stroke-width="2" />
+      <line x1="690" y1="772.5" x2="690" y2="777.5" stroke="#555" stroke-width="2" />
+      <text x="680" y="805" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">Target Gene</text>
+      <text x="680" y="830" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle">Gene Expression</text>
+    </g>
+  </g>
+
+  
+  <g id="signaling_arrows">
+    <path id="egf_to_egfr" d="M300 265 L300 330" fill="none" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <path id="egfr_to_ras" d="M300 430 L300 480" fill="none" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <path id="ras_to_raf" d="M326 504 H510" fill="none" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <path id="raf_to_mek" d="M590 505 H760" fill="none" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <path id="mek_to_erk" d="M840 505 H1010" fill="none" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <path id="erk_to_nuclear_erk" d="M1050 530 C1050 550, 950 600, 700 650 S540 690, 540 690" fill="none" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <path id="nuclear_erk_to_tf" d="M580 715 H680" fill="none" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+    <path id="tf_to_gene" d="M710 740 L710 765" fill="none" stroke="#333" stroke-width="2.5" marker-end="url(#arrowhead)" />
+  </g>
+
+</svg>

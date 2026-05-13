@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900"><defs>
+<symbol id="caspase" viewBox="0 0 72 52" overflow="visible">
+        
+        <ellipse cx="26" cy="26" rx="22" ry="18" fill="#C5A8E2" stroke="#5F3A8C" stroke-width="2" />
+        <ellipse cx="58" cy="26" rx="13" ry="11" fill="#D8BCE8" stroke="#5F3A8C" stroke-width="2" />
+        
+        <path d="M 42 14 Q 47 26 42 38" fill="none" stroke="#3F2A5C" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="3,2" />
+        
+        <text x="26" y="30" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="9" fill="#3F2A5C" font-weight="bold">Cys</text>
+    </symbol>
+<symbol id="rtk" viewBox="0 0 60 100" overflow="visible">
+        <rect x="10" y="5" width="40" height="32" rx="4" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2" />
+        <rect x="22" y="37" width="16" height="22" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2" />
+        <ellipse cx="30" cy="78" rx="22" ry="16" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" />
+        <text x="30" y="83" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#4A7A3F" font-weight="bold">K</text>
+    </symbol>
+<symbol id="generic_protein" viewBox="0 0 80 50" overflow="visible">
+        <rect x="5" y="5" width="70" height="40" rx="20" fill="#D4D4D4" stroke="#666666" stroke-width="2" />
+    </symbol>
+<symbol id="ligand" viewBox="0 0 40 30" overflow="visible">
+        
+        <path d="M 20 5 Q 8 5 8 15 Q 8 25 20 25 Q 32 25 32 15 Q 32 5 20 5 Z" fill="#FFD8B0" stroke="#C86B1F" stroke-width="1.8" stroke-linejoin="round" />
+        
+        <circle cx="14" cy="13" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+        <circle cx="26" cy="17" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+    </symbol>
+</defs>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+    </marker>
+  </defs>
+
+  <g id="figure_title" data-role="title">
+    <text x="800" y="38" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="bold" fill="#1a1a1a" text-anchor="middle">Extrinsic apoptosis: Fas → caspase cascade → substrate cleavage</text>
+  </g>
+
+  <g id="membrane_compartments" data-role="compartment_lines">
+    <line x1="0" y1="350" x2="1600" y2="350" stroke="#888" stroke-width="2" />
+    <line x1="0" y1="370" x2="1600" y2="370" stroke="#888" stroke-width="2" />
+    <text x="1400" y="250" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#666666" text-anchor="end">Extracellular</text>
+    <text x="1400" y="470" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#666666" text-anchor="end">Cytoplasm</text>
+  </g>
+
+  <g id="fasl_ligand" data-role="ligand">
+    <use href="#ligand" x="380" y="250" width="40" height="30" />
+    <text x="400" y="235" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">FasL</text>
+  </g>
+
+  <g id="fas_receptor" data-role="receptor">
+    <use href="#rtk" x="370" y="300" width="60" height="100" />
+    <text x="400" y="300" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Fas</text>
+  </g>
+
+  <g id="caspase_8_initiator" data-role="initiator_caspase">
+    <use href="#caspase" x="364" y="440" width="72" height="52" />
+    <text x="400" y="425" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Caspase-8</text>
+  </g>
+
+  <g id="caspase_3_executioner" data-role="executioner_caspase">
+    <use href="#caspase" x="364" y="570" width="72" height="52" />
+    <text x="400" y="555" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Caspase-3</text>
+  </g>
+
+  <g id="parp_substrate" data-role="substrate">
+    <use href="#generic_protein" x="360" y="700" width="80" height="50" />
+    <text x="400" y="685" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">PARP</text>
+  </g>
+
+  <g id="dna_fragmentation_result" data-role="outcome">
+    <text x="400" y="800" font-family="Helvetica, Arial, sans-serif" font-size="16" text-anchor="middle" fill="#d65a31">DNA Fragmentation</text>
+  </g>
+
+  <g id="signaling_pathway_arrows" data-role="arrows">
+    
+    <line x1="400" y1="280" x2="400" y2="330" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <line x1="400" y1="400" x2="400" y2="440" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <line x1="400" y1="492" x2="400" y2="570" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <line x1="400" y1="622" x2="400" y2="700" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <line x1="400" y1="750" x2="400" y2="780" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  </g>
+</svg>

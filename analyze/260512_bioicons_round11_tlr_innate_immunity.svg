@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700"><defs>
+<symbol id="generic_membrane_protein" viewBox="0 0 60 80" overflow="visible">
+        <rect x="5" y="5" width="50" height="70" rx="8" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2" />
+    </symbol>
+<symbol id="p_badge" viewBox="0 0 24 24" overflow="visible">
+        <circle cx="12" cy="12" r="10" fill="#FF6B47" stroke="#A33020" stroke-width="1.5" />
+        <text x="12" y="16" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="white" font-weight="bold">P</text>
+    </symbol>
+<symbol id="nucleus" viewBox="0 0 200 150" overflow="visible">
+        <ellipse cx="100" cy="75" rx="92" ry="65" fill="#F0E0F0" stroke="#5A2A7C" stroke-width="2.5" />
+        <ellipse cx="100" cy="75" rx="86" ry="60" fill="none" stroke="#5A2A7C" stroke-width="1" opacity="0.6" />
+        <circle cx="20" cy="60" r="3" fill="#5A2A7C" />
+        <circle cx="180" cy="65" r="3" fill="#5A2A7C" />
+        <circle cx="100" cy="12" r="3" fill="#5A2A7C" />
+        <circle cx="100" cy="138" r="3" fill="#5A2A7C" />
+    </symbol>
+<symbol id="transcription_factor" viewBox="0 0 60 50" overflow="visible">
+        
+        <path d="M 10 30 Q 10 6 30 6 Q 50 6 50 30 Z" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" stroke-linejoin="round" />
+        
+        <line x1="17" y1="30" x2="17" y2="42" stroke="#4A7A3F" stroke-width="2.5" stroke-linecap="round" />
+        <line x1="43" y1="30" x2="43" y2="42" stroke="#4A7A3F" stroke-width="2.5" stroke-linecap="round" />
+        
+        <path d="M 2 45 Q 12 41 22 45 T 42 45 Q 52 41 58 45" fill="none" stroke="#888888" stroke-width="1.5" />
+        <path d="M 2 48 Q 12 52 22 48 T 42 48 Q 52 52 58 48" fill="none" stroke="#888888" stroke-width="1.5" />
+    </symbol>
+<symbol id="ligand" viewBox="0 0 40 30" overflow="visible">
+        
+        <path d="M 20 5 Q 8 5 8 15 Q 8 25 20 25 Q 32 25 32 15 Q 32 5 20 5 Z" fill="#FFD8B0" stroke="#C86B1F" stroke-width="1.8" stroke-linejoin="round" />
+        
+        <circle cx="14" cy="13" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+        <circle cx="26" cy="17" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+    </symbol>
+<symbol id="generic_protein" viewBox="0 0 80 50" overflow="visible">
+        <rect x="5" y="5" width="70" height="40" rx="20" fill="#D4D4D4" stroke="#666666" stroke-width="2" />
+    </symbol>
+<symbol id="kinase" viewBox="0 0 80 50" overflow="visible">
+        <ellipse cx="40" cy="25" rx="35" ry="20" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" />
+    </symbol>
+</defs>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+    </marker>
+    <marker id="inhibition_marker" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <line x1="0" y1="5" x2="10" y2="5" stroke="#333" stroke-width="2" />
+    </marker>
+    <filter id="entity_shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  
+  <g id="compartment_labels">
+    <text x="800" y="50" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a" text-anchor="middle" data-role="label">Extracellular</text>
+    <text x="800" y="280" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a1a" text-anchor="middle" data-role="label">Cytoplasm</text>
+  </g>
+
+  
+  <g id="cell_membrane">
+    <line x1="0" y1="200" x2="1600" y2="200" stroke="#888" stroke-width="2" data-role="membrane_top" />
+    <line x1="0" y1="220" x2="1600" y2="220" stroke="#888" stroke-width="2" data-role="membrane_bottom" />
+  </g>
+
+  
+  <g id="lps_t_l_r4_binding">
+    <use href="#ligand" x="350" y="100" width="40" height="30" filter="url(#entity_shadow)" />
+    <text x="370" y="90" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle" data-role="label">LPS</text>
+    
+    <use href="#generic_membrane_protein" x="380" y="170" width="60" height="80" filter="url(#entity_shadow)" />
+    <text x="410" y="160" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle" data-role="label">TLR4</text>
+
+    <path d="M 370 130 C 370 150, 390 160, 400 170" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" data-role="activation_arrow" />
+    <text x="400" y="145" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#555" text-anchor="start" data-role="annotation">Binding</text>
+  </g>
+
+  
+  <g id="t_l_r4_activates_i_k_k">
+    <use href="#kinase" x="550" y="300" width="80" height="50" filter="url(#entity_shadow)" />
+    <text x="590" y="285" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle" data-role="label">IKK</text>
+    <path d="M 440 230 C 470 240, 520 260, 550 300" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" data-role="activation_arrow" />
+  </g>
+
+  
+  <g id="i_k_k_phosphorylates_i_kappa_b">
+    <use href="#generic_protein" x="350" y="380" width="80" height="50" filter="url(#entity_shadow)" />
+    <text x="390" y="365" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle" data-role="label">IκB</text>
+    <path d="M 550 325 C 500 350, 450 360, 400 380" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" data-role="activation_arrow" />
+    <use href="#p_badge" x="420" y="370" width="24" height="24" data-role="modification_badge" />
+    <text x="490" y="355" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle" data-role="annotation">P</text>
+  </g>
+
+  
+  <g id="i_kappa_b_inactivates_frees_n_f_kappa_b">
+    <use href="#generic_protein" x="350" y="480" width="80" height="50" filter="url(#entity_shadow)" />
+    <text x="390" y="465" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle" data-role="label">NF-κB</text>
+    <path d="M 390 430 V 465" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" data-role="activation_arrow" />
+    <text x="435" y="445" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#555" text-anchor="start" data-role="annotation">Inactivation &amp; Release</text>
+  </g>
+  
+  
+  <g id="n_f_kappa_b_translocation">
+    <use href="#nucleus" x="1000" y="380" width="200" height="150" filter="url(#entity_shadow)" />
+    <text x="1100" y="370" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="bold" fill="#1a1a1a" text-anchor="middle" data-role="label">Nucleus</text>
+
+    <use href="#transcription_factor" x="1070" y="460" width="60" height="50" filter="url(#entity_shadow)" />
+    <text x="1100" y="450" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#1a1a1a" text-anchor="middle" data-role="label">NF-κB</text>
+    
+    <path d="M 430 505 C 600 500, 800 500, 990 490" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" data-role="translocation_arrow" />
+    <text x="700" y="490" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle" data-role="annotation">Translocation</text>
+  </g>
+
+  
+  <g id="n_f_kappa_b_activates_genes">
+    <text x="1100" y="560" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#1a1a1a" text-anchor="middle" data-role="label">Pro-inflammatory genes</text>
+    <text x="1100" y="585" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle" data-role="annotation">(IL-6, TNF-α)</text>
+    <path d="M 1100 510 V 545" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" data-role="activation_arrow" />
+    <text x="1150" y="525" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#555" text-anchor="middle" data-role="annotation">Activation</text>
+  </g>
+</svg>

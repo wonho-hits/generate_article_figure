@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 900"><defs>
+<symbol id="kinase" viewBox="0 0 80 50" overflow="visible">
+        <ellipse cx="40" cy="25" rx="35" ry="20" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" />
+    </symbol>
+<symbol id="ligand" viewBox="0 0 40 30" overflow="visible">
+        
+        <path d="M 20 5 Q 8 5 8 15 Q 8 25 20 25 Q 32 25 32 15 Q 32 5 20 5 Z" fill="#FFD8B0" stroke="#C86B1F" stroke-width="1.8" stroke-linejoin="round" />
+        
+        <circle cx="14" cy="13" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+        <circle cx="26" cy="17" r="3" fill="#FFC890" stroke="#C86B1F" stroke-width="1.2" />
+    </symbol>
+<symbol id="generic_protein" viewBox="0 0 80 50" overflow="visible">
+        <rect x="5" y="5" width="70" height="40" rx="20" fill="#D4D4D4" stroke="#666666" stroke-width="2" />
+    </symbol>
+<symbol id="rtk" viewBox="0 0 60 100" overflow="visible">
+        <rect x="10" y="5" width="40" height="32" rx="4" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2" />
+        <rect x="22" y="37" width="16" height="22" fill="#A8C5E2" stroke="#3A5F7F" stroke-width="2" />
+        <ellipse cx="30" cy="78" rx="22" ry="16" fill="#B5D4A8" stroke="#4A7A3F" stroke-width="2" />
+        <text x="30" y="83" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#4A7A3F" font-weight="bold">K</text>
+    </symbol>
+<symbol id="p_badge" viewBox="0 0 24 24" overflow="visible">
+        <circle cx="12" cy="12" r="10" fill="#FF6B47" stroke="#A33020" stroke-width="1.5" />
+        <text x="12" y="16" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="white" font-weight="bold">P</text>
+    </symbol>
+</defs>
+  <defs>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#333" />
+    </marker>
+    <marker id="inhibition" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <line x1="0" y1="5" x2="10" y2="5" stroke="#333" stroke-width="2" />
+      <line x1="5" y1="0" x2="5" y2="10" stroke="#333" stroke-width="2" />
+    </marker>
+    <filter id="stage_shadow" x="-5%" y="-5%" width="115%" height="125%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  
+  <text x="500" y="40" font-family="Helvetica, Arial, sans-serif" font-size="26" font-weight="bold" fill="#1a1a1a" text-anchor="middle">Insulin Signaling Pathway</text>
+
+  
+  <g id="compartments" data-role="compartment_labels">
+    <text x="365" y="80" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#555555" text-anchor="start">Extracellular</text>
+    
+    <line x1="0" y1="150" x2="1000" y2="150" stroke="#888" stroke-width="2" />
+    <line x1="0" y1="170" x2="1000" y2="170" stroke="#888" stroke-width="2" />
+    <text x="365" y="200" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#555555" text-anchor="start">Cytoplasm</text>
+  </g>
+
+  
+
+  
+  <g id="insulin_receptor_activation" data-role="stage">
+    <use href="#ligand" x="400" y="100" width="40" height="30" />
+    <text x="420" y="90" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Insulin</text>
+    <use href="#rtk" x="390" y="120" width="60" height="100" />
+    <text x="420" y="130" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Insulin Receptor</text>
+    <use href="#p_badge" x="445" y="160" width="24" height="24" /> 
+  </g>
+
+  
+  <line x1="420" y1="130" x2="420" y2="145" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  <text x="420" y="138" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">Binding</text>
+
+
+  
+  <g id="irs1_recruitment" data-role="stage">
+    <use href="#generic_protein" x="380" y="240" width="80" height="50" />
+    <text x="420" y="270" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">IRS-1</text>
+    <use href="#p_badge" x="450" y="245" width="24" height="24" /> 
+  </g>
+
+  
+  <line x1="420" y1="210" x2="420" y2="240" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  <text x="420" y="225" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">Recruits &amp;<tspan x="420" dy="15">Phosphorylates</tspan></text>
+
+
+  
+  <g id="pi3k_activation" data-role="stage">
+    <use href="#kinase" x="380" y="350" width="80" height="50" />
+    <text x="420" y="380" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">PI3K</text>
+    <use href="#p_badge" x="450" y="355" width="24" height="24" /> 
+  </g>
+
+  
+  <line x1="420" y1="290" x2="420" y2="350" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  <text x="420" y="320" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">Activates</text>
+
+  
+  <g id="pip2_to_pip3" data-role="stage">
+    
+    <rect x="520" y="420" width="100" height="30" rx="8" ry="8" fill="#D8E8F8" stroke="#3A5F7F" stroke-width="1.5" />
+    <text x="570" y="440" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle" fill="#3A5F7F">PIP2</text>
+    
+    <rect x="520" y="520" width="100" height="30" rx="8" ry="8" fill="#BCD8BE" stroke="#4A7A3F" stroke-width="1.5" />
+    <text x="570" y="540" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle" fill="#4A7A3F">PIP3</text>
+    <use href="#p_badge" x="600" y="515" width="24" height="24" /> 
+  </g>
+
+  
+  <path d="M 420 400 V 415 C 420 430, 500 430, 520 430 H 550" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  <text x="460" y="415" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">Phosphorylates</text>
+
+
+  
+  <g id="akt_activation" data-role="stage">
+    <use href="#kinase" x="380" y="600" width="80" height="50" />
+    <text x="420" y="630" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">AKT (PKB)</text>
+    <use href="#p_badge" x="450" y="605" width="24" height="24" /> 
+  </g>
+
+  
+  <path d="M 570 550 V 580 C 570 595, 450 595, 420 595 H 420" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  <text x="530" y="575" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#555" text-anchor="start">Recruits &amp;</text>
+  <text x="530" y="590" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#555" text-anchor="start">Activates</text>
+
+
+  
+  <g id="downstream_targets" data-role="stage">
+    <use href="#generic_protein" x="380" y="750" width="80" height="50" />
+    <text x="420" y="780" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle">Downstream Targets</text>
+    <use href="#p_badge" x="450" y="755" width="24" height="24" /> 
+    <text x="420" y="810" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">Mediate</text>
+    <text x="420" y="825" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#333" text-anchor="middle">Glucose Uptake</text>
+  </g>
+
+  
+  <line x1="420" y1="650" x2="420" y2="750" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+  <text x="420" y="700" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#555" text-anchor="middle">Phosphorylates</text>
+
+</svg>
