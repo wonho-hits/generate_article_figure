@@ -688,12 +688,19 @@ CATALOG: list[SymbolEntry] = [
                 "GTPase. For the inactive form, the LLM can override the inner "
                 "'T' text to 'D' via additional <text> overlay.",
                 52, 48),
-    SymbolEntry("ligand", "Ligand (growth factor / cytokine)", "signaling",
-                "Generic small extracellular ligand — clover-shaped peach blob. "
-                "Use for growth factors (EGF, FGF, VEGF, TGF-β), cytokines, "
-                "hormones (insulin). Place just above a receptor (gpcr, rtk, "
-                "integrin) on the extracellular side; the LLM should label "
-                "the specific ligand with a `<text>` next to or above the icon.",
+    SymbolEntry("ligand", "Ligand (any signalling molecule)", "signaling",
+                "Generic small ligand — clover-shaped peach blob. Use for ANY "
+                "signalling molecule that binds a receptor or is internalised "
+                "to act inside the cell: peptide growth factors (EGF, FGF, "
+                "VEGF, TGF-β, insulin), cytokines, neurotransmitters, AND "
+                "lipophilic hormones / steroid hormones (cortisol, oestrogen, "
+                "testosterone, thyroid hormone). For surface-receptor pathways "
+                "place above a receptor (gpcr / rtk / integrin); for nuclear-"
+                "receptor pathways place it inside the cytoplasm next to a "
+                "cytoplasmic receptor (use `generic_protein` for the unbound "
+                "receptor, `transcription_factor` for the hormone-receptor "
+                "complex on DNA). Label the specific ligand with a `<text>` "
+                "next to the icon.",
                 40, 30),
     SymbolEntry("g_protein_trimer", "G-protein heterotrimer (αβγ)", "signaling",
                 "G-protein heterotrimer with three distinguishable subunits — "

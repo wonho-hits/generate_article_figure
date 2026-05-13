@@ -1504,6 +1504,61 @@ Final domain coverage (verified production-ready):
    purely by adding a dedicated `bioicons_cancer_cell` icon (H50).
    The same prompt + better library = better figure.
 
+### Round 17 — verify catalog-description fixes from round 16
+
+Round 16 surfaced two `use_when` gaps. Round 16 fixed the first
+(endocytosis description, in commit 027681e) but didn't re-verify
+the fix worked. Round 17 also extends the second gap (`ligand`
+description for lipophilic hormones) and re-runs both prompts to
+confirm both fixes work.
+
+Same prompts as round 16:
+
+| Target | Round 16 | Round 17 | Verdict |
+|---|---|---|---|
+| `bioicons_endocytosis` (phagocytosis prompt) | 0× | 1× | ✓ FIXED |
+| `ligand` (steroid hormone prompt) | 0× | 2× | ✓ FIXED |
+
+**Phagocytosis v2**: 5-panel sequence rendered cleanly. LLM picked
+`bioicons_endocytosis` for the engulfment panel; surrounding panels
+use LLM-defined inline symbols (`macrophage_cell_outline`,
+`bacterium_body`, `lysosome_enzyme`) — appropriate fallback for
+roles the library doesn't cover. Pass 1 score 2 (2 low). See
+`analyze/260513_bioicons_round17_phagocytosis_v2.png`.
+
+**Steroid hormone v2**: Clean vertical pathway. LLM used `ligand`
+TWICE — once outside the membrane (labelled "Steroid Hormone /
+Cortisol") and once inside the cytoplasm after diffusing across the
+membrane. The doubled use visualises the diffusion event itself —
+unprompted creative composition. Pass 1 score 1 (1 low — excellent).
+See `analyze/260513_bioicons_round17_steroid_hormone_v2.png`.
+
+### Round 17 verdict
+
+- **H53 doubly validated**: extending the `use_when` description for
+  a symbol immediately unblocks discovery of that symbol for the
+  newly-mentioned use case. Two clean before/after data points
+  (phagocytosis: 0→1, ligand: 0→2). The catalog descriptions are not
+  just documentation — they are the LLM's primary semantic index into
+  the library.
+- **NEW H54 [채택]**: When the LLM has a single icon that fits a
+  multi-step biological process (a ligand moving across membrane),
+  it can creatively re-use the icon at multiple positions to depict
+  the event itself, not just static placement. The steroid hormone
+  `ligand` ×2 (extracellular + cytoplasmic) was unprompted.
+
+### Final state after round 17
+
+```
+SYMBOLS: 81 entries (unchanged — round 17 was description-only)
+Architectural fixes (4): unchanged
+Prompt patterns (3): unchanged
+Tests: 225 passed, 5 skipped
+Cumulative live API cost (this session): ~$0.22
+Hypotheses: 34 채택, 0 reject, 0 partial
+Live tests: ~42 generations across 17 rounds
+```
+
 ### Remaining (genuine follow-ups, not in this pilot)
 
 - **`<image>` (raster) embedding inside `<symbol>`** — for photorealistic
@@ -1512,14 +1567,13 @@ Final domain coverage (verified production-ready):
 - **Coord templates for other figure types** — round 13 verified the
   pattern for vertical signalling cascades. Could apply similarly to
   ECM panels, mitosis stage rows, multi-cell tissue diagrams.
-- **Hormone ligand description gap** — round 16 found `ligand`
-  description (focused on growth factors / cytokines) doesn't reach
-  for steroid hormones. Small description extension would fix.
 - **Autophagy deep dive** — autophagosome, lysosome, mitophagy-specific
   icons.
 - **Immune signalling deep dive** — TCR/BCR-specific shapes, MHC I/II.
 - **Nuclear receptors** — separate symbol from `transcription_factor`
-  for steroid hormone biology.
+  for steroid hormone biology. (Round 17 showed the current setup —
+  `generic_protein` + `transcription_factor` — works adequately, so
+  not pressing.)
 
 ## Files added / modified
 
