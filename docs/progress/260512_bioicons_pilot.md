@@ -1727,18 +1727,103 @@ Domain coverage (verified production-ready):
   ✓ Immunology / antigen presentation / immune synapse  ← NEW
 ```
 
+### Round 20 — FINAL cross-domain dogfood (release exam)
+
+After 19 rounds of expansion + verification, 88 symbols covering 13
+domains. Round 20 is the release exam: 3 prompts that each span
+MULTIPLE domains, with no icon hints. Goal: confirm the library
+composes coherently across domains, not just within them.
+
+**3 cross-domain prompts:**
+- `car_t_therapy` — cancer + immune + apoptosis (3 domains)
+- `tumor_microenvironment` — cancer + ECM + immune (3 domains)
+- `wound_healing` — ECM + immune + growth-factor signaling (3 domains)
+
+**Aggregate result: 13/13 expected icons across 3 prompts (100%).**
+
+| Prompt | Expected | Found | Pass1 | Pass2 | Visual |
+|---|---|---|---|---|---|
+| CAR-T therapy | 3 (t_lymph, cancer_cell, caspase) | 3/3 | 2 | 1 (improved) | publication-quality mechanism figure |
+| Tumor microenvironment | 6 (tumor, fibroblast, collagen, macrophage, t_lymph, mmp) | **6/6** | 2 | 9 (regressed) | most complex composition: 18 use refs across 6 icon types |
+| Wound healing | 4 (macrophage, fibroblast, collagen, ligand) | 4/4 | 2 | 3 | 4-stage horizontal: cleaning → recruitment → deposition → remodeling |
+
+**Three findings:**
+
+1. **All cross-domain compositions succeeded.** Round 20 had ZERO
+   discovery failures (compared to round 16's 75% on intentionally-
+   harder domains). The library covers enough biology to compose
+   complex multi-domain figures without primitive fallbacks for the
+   major cell/protein/matrix roles.
+
+2. **The LLM continues creative composition.** For CAR-T it created
+   inline symbols for `car_receptor` and `cytotoxic_granule` ×3 — both
+   things we don't have a library icon for (CAR is engineered, not in
+   nature; cytotoxic granules are a niche role). The LLM filled these
+   gaps with custom inline `<symbol>` definitions, not ad-hoc primitive
+   shapes.
+
+3. **Tumor-microenvironment was the most complex composition of the
+   session.** 18 `<use>` refs across 6 distinct library icons (collagen
+   ×8, fibroblast ×3, macrophage ×2, t_lymphocyte ×2, tumor ×1, mmp
+   ×2), arranged spatially around a central tumor mass with proper
+   biological context (CAF / TAM labels). Pass-2 critic regressed
+   2 → 9 (2 HIGH severities) — keep-best correctly chose pass 1.
+   This was the strongest demonstration in the session of why
+   keep-best is essential: pass 2 would have shipped a broken figure.
+
+### Round 20 hypothesis verdict
+
+- **NEW H57 [채택]**: After 88 symbols across 13 domains, the library
+  composes coherently for cross-domain biology figures. The LLM
+  discovers the right icons without hints and fills genuine gaps
+  (engineered receptors, niche structures) with custom inline symbols
+  rather than ad-hoc primitives.
+
+### Final final state (rounds 1-20)
+
+```
+SYMBOLS: 88 entries — unchanged from round 19 (round 20 was dogfood-only)
+Architectural fixes (4):
+  1. Lazy <defs> injection
+  2. Keep-best critic loop (severity-weighted)
+  3. Transitive <use> resolution
+  4. _patch_use_dimensions
+Prompt patterns (3):
+  1. Catalog injection with use_when descriptions
+  2. Domain-specific recipe sections
+  3. Concrete coordinate templates for dense cascades
+Tests: 232 passed, 5 skipped
+Cumulative live API cost (this session): ~$0.29
+Live tests: ~48 generations across 20 rounds
+Hypotheses: 37 채택, 0 reject, 0 partial
+Commits on origin/main: 4 (027681e, f2ef3a2, 43b56d4, d106211) + round 18 + round 20 pending
+
+13 biological domains, all verified production-ready:
+  Signaling pathways (MAPK / GPCR / Wnt / Insulin / TLR / steroid hormone)
+  Apoptosis (intrinsic + extrinsic + CAR-T cytotoxicity)
+  ECM composition (collagen / fibronectin / laminin / proteoglycan / BM)
+  ECM ↔ cell bridge (integrin + cytoskeleton + cadherin)
+  Matrix remodelling (MMP)
+  Cell-cell adhesion (tight / gap / desmosome / hemidesmosome)
+  Cell division per-stage (mitosis 6 + meiosis 8 wrappers)
+  Early development arc (sperm → blastocyst)
+  Vesicle trafficking / phagocytosis / translation
+  Cancer invasion / metastasis / microenvironment
+  Autophagy / mitophagy
+  Immunology / antigen presentation / immune synapse
+  Wound healing / EMT / fibrosis (multi-domain compositions)
+```
+
 ### Remaining (genuine follow-ups, not in this pilot)
 
-- **`<image>` (raster) embedding inside `<symbol>`** — for photorealistic
-  icons whose SVG bulk is mostly gradient defs.
-- **Coord templates for other figure types** — round 13 verified for
-  vertical cascades; could extend to ECM panels, mitosis rows, etc.
-- **Nuclear receptors** — separate symbol from `transcription_factor`.
-  (Round 17 showed the current setup works adequately for steroid
-  hormone biology.)
-- **TCR/BCR specific icons** — round 19 used `generic_membrane_protein`
-  as TCR fallback. A dedicated αβ-TCR shape would be more anatomically
-  correct.
+- **`<image>` (raster) embedding inside `<symbol>`** — could shrink
+  Xi-Chen photorealistic icons (100-300 KB each) at the cost of vector
+  fidelity. Not pressing thanks to lazy injection.
+- **Coord templates for other figure types** — round 13 pattern could
+  extend to ECM panels, mitosis rows, multi-cell tissue diagrams.
+- **Dedicated TCR/BCR/CAR icons** — round 19/20 used
+  `generic_membrane_protein` or inline custom symbols. Works, but
+  dedicated icons would polish.
 
 ## Files added / modified
 
