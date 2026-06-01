@@ -297,8 +297,9 @@ def build_ui() -> gr.Blocks:
         gr.Markdown("# Article Figure Generator (MVP)")
         gr.Markdown(
             "Bio/chem publication-quality figures from text prompts. "
-            "Auto-routes between **Path A** (vector schematic, SVG) and "
-            "**Path C** (raster illustration, BioRender-style). "
+            "Auto-routes between **Path A** (vector schematic, SVG), "
+            "**Path C** (raster illustration, BioRender-style), and "
+            "**Path D** (mixed: vector backbone + generated raster icons). "
             "Edit raster outputs with conversational reprompts. "
             "Download as SVG / PPTX / image."
         )
@@ -315,10 +316,14 @@ def build_ui() -> gr.Blocks:
                         placeholder="e.g., MAPK signaling cascade with EGF, Ras, Raf, MEK, ERK",
                     )
                     kind_in = gr.Dropdown(
-                        choices=["auto", "vector", "raster"],
+                        choices=["auto", "vector", "raster", "mixed"],
                         value="auto",
                         label="Figure kind",
-                        info="auto = router decides; vector = force Path A; raster = force Path C",
+                        info=(
+                            "auto = router decides; vector = force Path A; "
+                            "raster = force Path C; mixed = force Path D "
+                            "(vector backbone + generated raster icons)"
+                        ),
                     )
                     generate_btn = gr.Button("Generate", variant="primary")
 
