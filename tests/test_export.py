@@ -193,3 +193,38 @@ def test_export_pptx_from_svg_uses_viewbox_aspect_ratio() -> None:
     # Just verify the file is well-formed PPTX with the SVG present.
     assert "ppt/media/image1.svg" in z.namelist()
     assert "svgBlip" in slide_xml
+
+
+# ── svg_has_embedded_raster (Path D detection / PPTX warning) ──────────────
+
+def test_svg_has_embedded_raster_true_for_data_uri_image() -> None:
+    from app.tools.export import svg_has_embedded_raster
+
+    mixed = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
+        '<g id="i"><image href="data:image/png;base64,iVBORw0KGgo="/></g></svg>'
+    )
+    assert svg_has_embedded_raster(mixed) is True
+
+
+def test_svg_has_embedded_raster_false_for_pure_vector() -> None:
+    from app.tools.export import svg_has_embedded_raster
+
+    assert svg_has_embedded_raster(SVG_TEXT) is False
+
+
+def test_export_pptx_from_svg_warns_on_mixed(capsys) -> None:
+    mixed = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">'
+        '<g id="i"><image href="data:image/png;base64,iVBORw0KGgo="/></g></svg>'
+    )
+    r = export_pptx_from_svg(mixed, session_id=SESSION_ID)
+    assert r.media_type == PPTX_MIME
+    captured = capsys.readouterr()
+    assert "pptx_mixed_raster" in (captured.out + captured.err)
+
+
+def test_export_pptx_from_svg_no_warn_on_pure_vector(capsys) -> None:
+    export_pptx_from_svg(SVG_TEXT, session_id=SESSION_ID)
+    captured = capsys.readouterr()
+    assert "pptx_mixed_raster" not in (captured.out + captured.err)

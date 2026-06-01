@@ -25,6 +25,21 @@ PATH C — Raster illustration (Gemini Image generation)
   images, anything whose visual identity depends on natural form.
   Output: PNG (bitmap).
 
+PATH D — Mixed schematic (vector backbone + generated raster icons)
+  Best for: a STRUCTURED DIAGRAM (precise labeled arrows, compartments,
+  pathway/flow layout) WHOSE ENTITIES are illustrated cells / organisms /
+  morphologically-rich biological objects that a clean vector schematic
+  cannot draw well. The figure needs BOTH crisp vector connectors+labels
+  AND illustrated entities. Text stays crisp (it lives in the vector
+  backbone); entities are drawn as generated icons.
+  Output: SVG with embedded raster icons.
+  Pick D over A when the entities need illustration (real cell morphology),
+  but a full free-form scene (C) would lose the precise arrows/labels the
+  user wants. Pick D over C when labeled arrows / compartments / a defined
+  layout are essential and must stay sharp and well-placed.
+  When unsure between A and D, prefer A (vector library is reliable); when
+  unsure between C and D, prefer D only if structured arrows/labels matter.
+
 DECISION RULES
 1. If the prompt asks for atom-level chemical structure (drawing molecules,
    showing organic mechanisms with electron pushing, depicting drug

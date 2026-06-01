@@ -309,3 +309,80 @@ async def test_gemini_response_error_returns_503() -> None:
 
     assert response.status_code == 503
     assert "malformed response" in response.json()["detail"]
+
+
+# --- Path D (mixed vector + generated raster icons) ---
+
+MIXED_SVG = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">'
+    '<g id="tcell" data-role="entity">'
+    '<image x="10" y="10" width="50" height="50" '
+    'href="data:image/png;base64,iVBORw0KGgo="/>'
+    '<text x="35" y="80">T cell</text></g></svg>'
+)
+
+
+@pytest.mark.asyncio
+async def test_auto_routes_to_path_d_returns_svg() -> None:
+    with (
+        patch("app.agent.orchestrator.Router") as MockRouter,
+        patch("app.agent.orchestrator.generate_mixed_figure") as mock_d,
+    ):
+        MockRouter.return_value.decide = AsyncMock(
+            return_value=RoutingDecision(path="D", reason="structured + illustrated cells")
+        )
+        mock_d.return_value = MIXED_SVG
+
+        async with _make_client() as client:
+            response = await client.post(
+                "/generate", json={"prompt": "T cell activation diagram with cell icons"}
+            )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["kind"] == "svg"
+    assert "data:image/png;base64," in body["artifact"]
+    assert body["routing_reason"] == "structured + illustrated cells"
+
+
+@pytest.mark.asyncio
+async def test_figure_kind_mixed_forces_path_d() -> None:
+    with patch("app.agent.orchestrator.generate_mixed_figure") as mock_d:
+        mock_d.return_value = MIXED_SVG
+        async with _make_client() as client:
+            response = await client.post(
+                "/generate", json={"prompt": "anything", "figure_kind": "mixed"}
+            )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["kind"] == "svg"
+    assert "explicit override" in body["routing_reason"]
+    mock_d.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_figure_kind_vector_degrades_path_d_to_a() -> None:
+    """vector mode forbids raster content; router→D must fall back to A."""
+    with (
+        patch("app.agent.orchestrator.Router") as MockRouter,
+        patch("app.agent.orchestrator.generate_vector_schematic") as mock_a,
+        patch("app.agent.orchestrator.generate_mixed_figure") as mock_d,
+    ):
+        MockRouter.return_value.decide = AsyncMock(
+            return_value=RoutingDecision(path="D", reason="illustrated cells")
+        )
+        mock_a.return_value = GOOD_SVG
+
+        async with _make_client() as client:
+            response = await client.post(
+                "/generate",
+                json={"prompt": "cells with arrows", "figure_kind": "vector"},
+            )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["kind"] == "svg"
+    assert "fallback A" in body["routing_reason"]
+    mock_a.assert_called_once()
+    mock_d.assert_not_called()

@@ -27,6 +27,7 @@ from app.tools.raster_illustration import (
     detect_image_mime,
     generate_raster_illustration,
 )
+from app.tools.mixed_schematic import generate_mixed_figure
 from app.tools.vector_schematic import ProgressCallback, generate_vector_schematic
 
 logger = structlog.get_logger(__name__)
@@ -69,6 +70,8 @@ class Orchestrator:
             return await self._dispatch_vector(request, decision, progress=progress)
         if decision.path == "B":
             return await self._dispatch_chemistry(request, decision)
+        if decision.path == "D":
+            return await self._dispatch_mixed(request, decision, progress=progress)
         return await self._dispatch_raster(request, decision)
 
     async def _dispatch_vector(
@@ -79,6 +82,27 @@ class Orchestrator:
         progress: ProgressCallback | None = None,
     ) -> GenerateResult:
         svg = await generate_vector_schematic(
+            request.prompt, client=self._client, progress=progress
+        )
+        entry = await self._sessions.create()
+        await self._sessions.update(entry.session_id, svg)
+        return GenerateResult(
+            session_id=entry.session_id,
+            artifact=svg,
+            kind="svg",
+            routing_reason=decision.reason,
+        )
+
+    async def _dispatch_mixed(
+        self,
+        request: GenerateRequest,
+        decision: RoutingDecision,
+        *,
+        progress: ProgressCallback | None = None,
+    ) -> GenerateResult:
+        """Path D: vector backbone + generated raster icons. Output is an SVG
+        string (with embedded data-URI <image> regions), so kind='svg'."""
+        svg = await generate_mixed_figure(
             request.prompt, client=self._client, progress=progress
         )
         entry = await self._sessions.create()
@@ -180,13 +204,17 @@ class Orchestrator:
             return RoutingDecision(
                 path="C", reason="explicit override (figure_kind=raster)"
             )
+        if figure_kind == "mixed":
+            return RoutingDecision(
+                path="D", reason="explicit override (figure_kind=mixed)"
+            )
         # auto and vector both run the router
         decision = await self._router.decide(prompt)
-        if figure_kind == "vector" and decision.path == "C":
-            # vector mode forbids C; degrade to A. The reason field is capped
-            # at 200 chars in RoutingDecision, so truncate the embedded
-            # router reason before wrapping.
-            wrapper = "vector forced; router→C ("
+        # vector mode forbids any path with raster content (C raster, D mixed);
+        # degrade to pure-vector A. The reason field is capped at 200 chars, so
+        # truncate the embedded router reason before wrapping.
+        if figure_kind == "vector" and decision.path in ("C", "D"):
+            wrapper = f"vector forced; router→{decision.path} ("
             suffix = ") → fallback A"
             budget = 200 - len(wrapper) - len(suffix)
             embedded = decision.reason[:budget]

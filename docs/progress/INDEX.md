@@ -24,8 +24,9 @@ Steps 1, 2, 3, 4, 5, 8, 9, 6 in actual execution order — the build order was r
 |------|-------|---------|
 | 260512 | [bioicons pilot](260512_bioicons_pilot.md) | Symbol library expanded across 13 biological domains; 4 architectural fixes; cross-domain composition verified |
 | 260513 | [Gradio streaming progress](260513_gradio_streaming_progress.md) | Path A progress callback → orchestrator → async-generator Gradio handler; live log + Edit-button gating |
+| 260601 | [Path D — mixed vector + raster](260601_path_d_mixed_vector_raster.md) | Vector backbone + all-generated text-free raster icons; data-URI `<image>` sanitizer exception; threshold bg-removal (no rembg); H58-H62 채택; live e2e ✓ |
 
-Step 7 (background removal) deferred — Path C output is already on white in practice.
+Step 7 (background removal) RESOLVED by Path D — Pillow white-threshold (no rembg needed).
 
 ## Key hypotheses (final status)
 
@@ -55,8 +56,15 @@ Step 7 (background removal) deferred — Path C output is already on white in pr
 | H22 | LLM extraction + RDKit pipeline produces correct chemistry | 채택 |
 | H23 | PubChemPy fallback covers compounds the LLM doesn't know SMILES for | 채택 (mocks; not exercised live yet) |
 | H24 | Router extends to A/B/C via prompt-only changes | 채택 |
+| H58 | Path D: LLM emits vector backbone + gen-icon placeholders | 채택 |
+| H59 | Fixed icon style prefix keeps independently-generated icons consistent | 채택 |
+| H60 | White-threshold bg removal is clean (no rembg needed) | 채택 |
+| H61 | data-URI `<image>` embed renders + sanitizer exception is safe | 채택 |
+| H62 | crop+downscale(320)+quantize(64) keeps icon embed < 100 KB | 채택 |
 
 No hypotheses 기각 to date.
+
+> H25-H57 tracked in their own progress logs (bioicons rounds, etc.).
 
 ## Cumulative live API cost during development
 

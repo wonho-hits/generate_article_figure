@@ -9,14 +9,31 @@ Three formats, each tied to its compatible session kind:
 from __future__ import annotations
 
 import io
+import re
 from dataclasses import dataclass
 
+import structlog
 from PIL import Image as PILImage
 from pptx import Presentation
 from pptx.util import Inches
 
 from app.tools.export_svg_pptx import build_svg_embedded_pptx
 from app.tools.raster_illustration import detect_image_mime
+
+logger = structlog.get_logger(__name__)
+
+# Detects a Path D mixed figure: an <image> carrying a base64 data URI embedded
+# in the SVG. Those raster icons do NOT survive PowerPoint's "Convert to Shape"
+# (they stay as bitmaps); the vector backbone does convert. We warn so the
+# caller can surface that to the user.
+_EMBEDDED_RASTER_RE = re.compile(
+    r"<image\b[^>]*(?:xlink:)?href\s*=\s*\"data:image/", re.IGNORECASE
+)
+
+
+def svg_has_embedded_raster(svg_string: str) -> bool:
+    """True if the SVG embeds raster icons via data-URI <image> (Path D)."""
+    return _EMBEDDED_RASTER_RE.search(svg_string) is not None
 
 PPTX_MIME = (
     "application/vnd.openxmlformats-officedocument.presentationml.presentation"
@@ -76,6 +93,15 @@ def export_pptx_from_svg(svg_string: str, *, session_id: str) -> ExportResult:
     """
     if not svg_string or not svg_string.strip():
         raise ValueError("svg_string is empty")
+    if svg_has_embedded_raster(svg_string):
+        logger.warning(
+            "export.pptx_mixed_raster",
+            msg=(
+                "SVG embeds generated raster icons (Path D). The vector "
+                "backbone converts to editable shapes in PowerPoint, but the "
+                "raster icons remain bitmaps (not 'Convert to Shape'-able)."
+            ),
+        )
     pptx_bytes = build_svg_embedded_pptx(svg_string)
     return ExportResult(
         content=pptx_bytes,

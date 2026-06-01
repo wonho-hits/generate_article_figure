@@ -125,3 +125,66 @@ def test_no_xmlns_input_gets_xmlns_added() -> None:
     no_ns = '<svg viewBox="0 0 100 100"><g id="x"><rect/></g></svg>'
     out = validate_and_canonicalize(no_ns)
     assert 'xmlns="http://www.w3.org/2000/svg"' in out
+
+
+# ── Path D: data-URI <image> exception (allow_data_image) ──────────────────
+
+# 1x1 transparent PNG.
+_PNG_1PX = (
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk"
+    "+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+)
+
+
+def _svg_with_image(href: str) -> str:
+    return (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">'
+        '<g id="icon" data-role="entity">'
+        f'<image x="10" y="10" width="50" height="50" href="{href}"/>'
+        "</g></svg>"
+    )
+
+
+def test_data_image_allowed_when_opted_in() -> None:
+    svg = _svg_with_image(f"data:image/png;base64,{_PNG_1PX}")
+    out = validate_and_canonicalize(svg, allow_data_image=True)
+    assert "<image" in out
+
+
+def test_data_image_still_forbidden_by_default() -> None:
+    """Back-compat: Path A must keep rejecting <image> outright."""
+    svg = _svg_with_image(f"data:image/png;base64,{_PNG_1PX}")
+    with pytest.raises(SVGValidationError, match="forbidden element <image>"):
+        validate_and_canonicalize(svg)
+
+
+def test_http_image_href_rejected_even_when_opted_in() -> None:
+    svg = _svg_with_image("https://evil.example/x.png")
+    with pytest.raises(SVGValidationError, match="data:image"):
+        validate_and_canonicalize(svg, allow_data_image=True)
+
+
+def test_data_html_href_rejected_even_when_opted_in() -> None:
+    svg = _svg_with_image("data:text/html;base64,PHNjcmlwdD4=")
+    with pytest.raises(SVGValidationError, match="data:image"):
+        validate_and_canonicalize(svg, allow_data_image=True)
+
+
+def test_image_without_href_rejected_when_opted_in() -> None:
+    svg = (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">'
+        '<g id="icon"><image x="10" y="10" width="50" height="50"/></g></svg>'
+    )
+    with pytest.raises(SVGValidationError, match="data:image"):
+        validate_and_canonicalize(svg, allow_data_image=True)
+
+
+def test_xlink_href_data_image_allowed() -> None:
+    svg = (
+        '<svg xmlns="http://www.w3.org/2000/svg" '
+        'xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 800 600">'
+        '<g id="icon"><image x="10" y="10" width="50" height="50" '
+        f'xlink:href="data:image/jpeg;base64,{_PNG_1PX}"/></g></svg>'
+    )
+    out = validate_and_canonicalize(svg, allow_data_image=True)
+    assert "image" in out

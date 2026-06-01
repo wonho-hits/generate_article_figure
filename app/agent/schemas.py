@@ -10,10 +10,13 @@ ArtifactKind = Literal["svg", "raster"]
 """SVG (Path A) or raster (Path C). Actual format (PNG/JPEG/WebP) is encoded
 in the data URI's MIME type when kind='raster'."""
 
-FigureKind = Literal["auto", "vector", "raster"]
-"""Caller's preference. "auto" → router decides. Otherwise force a path."""
+FigureKind = Literal["auto", "vector", "raster", "mixed"]
+"""Caller's preference. "auto" → router decides. "vector"→A, "raster"→C,
+"mixed"→D (vector backbone + generated raster icons)."""
 
-RoutingPath = Literal["A", "B", "C"]
+RoutingPath = Literal["A", "B", "C", "D"]
+"""A=vector schematic, B=RDKit chemistry, C=raster illustration,
+D=mixed vector backbone + generated raster icons."""
 
 
 class GenerateRequest(BaseModel):
