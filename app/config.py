@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     google_api_key: str = Field(..., description="Google AI Studio API key for Gemini")
     log_level: str = Field("INFO", description="Logging level")
     session_ttl_seconds: int = Field(3600, ge=60, description="Session TTL in seconds")
-    gemini_text_model: str = Field("gemini-2.5-flash")
+    gemini_text_model: str = Field("gemini-3.5-flash")
     gemini_image_model: str = Field("gemini-3.1-flash-image-preview")
     gemini_max_retries: int = Field(3, ge=0, le=10)
 
