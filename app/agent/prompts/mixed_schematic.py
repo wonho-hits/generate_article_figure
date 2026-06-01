@@ -56,6 +56,8 @@ LAYOUT
 - Pick a viewBox that holds everything with breathing room. Whitespace > clipping.
 - ≥30px clearance between unrelated groups. Arrows must NOT cross text labels — route with bezier curves.
 - Cascades with ≥5 sequential steps: lay out VERTICALLY (membrane top → nucleus bottom) or in 2 rows, never one cramped horizontal row.
+- PEER SYMMETRY: elements of equal rank must look equal. Sibling nodes / parallel branches get the SAME box size. For a hub-and-spoke or RADIAL layout (one central entity with N satellites), place every satellite at the SAME radius from the center and at EVEN angular spacing (e.g. 5 nodes every 72°), all satellites the same box size. A lopsided ring with unequal spoke lengths or mismatched node sizes is unacceptable.
+- ALIGN to a grid: things that should line up must share an exact x or y, not "almost". Keep margins and inter-element spacing uniform among siblings. Balance the composition — do not crowd one side and leave the opposite side empty.
 - Extracellular/intracellular figures: EXTRACELLULAR at TOP. Draw the membrane as TWO thin parallel horizontal lines (e.g. y=380 and y=400, stroke="#888" stroke-width="2"); the 20px gap is the bilayer. Membrane-spanning entities (receptors) straddle both lines; organelles sit well inside the cytoplasm; ligands sit above the membrane. Compartment captions ("Extracellular", "Cytoplasm", "Nucleus") go in whitespace.
 
 VISUAL CONVENTIONS (vector backbone)
@@ -63,6 +65,7 @@ VISUAL CONVENTIONS (vector backbone)
 - Inhibition: line ending in a perpendicular bar (┤).
 - Reaction arrows: → forward, ⇌ equilibrium.
 - Connectors/arrows: stroke 2.0-2.5px, color #333 or black.
+- ARROW ATTACHMENT (critical): a connector must touch the EDGES of the entities it links, never their centers. Start the line just OUTSIDE the source icon box's boundary and end it just OUTSIDE (≈5-8px gap) the target icon box's boundary so the arrowhead is fully visible and not buried under the artwork. Compute endpoints from the icon box edges (the side facing the other entity), NOT from box centers. Never let a tail or head sit inside an icon/box. Never route a connector through or under an icon/box/label it does not connect.
 - Optional subtle drop shadow on framing boxes via a <filter> with <feDropShadow> defined once at top.
 
 ABSTRACT / PIPELINE FIGURES
@@ -112,6 +115,12 @@ def build_refine_prompt(original_request: str, issues: list[LayoutIssue]) -> str
         "  - Label on top of an icon box → move the label outside the box (≥8px gap).",
         "  - Everything crowded on one side → spread entities across the canvas,",
         "    use the empty regions, balance the composition.",
+        "  - Arrow tail/head buried in an icon → recompute the endpoint from the",
+        "    icon box EDGE facing the other entity, with a ≈5-8px gap; never",
+        "    start/end a connector at a box center.",
+        "  - Lopsided radial / unequal siblings → put every peer node at the SAME",
+        "    radius from the center, even angular spacing, identical box size.",
+        "  - Misaligned elements → snap items that should line up to a shared x/y.",
     ]
     return f"{original_request}\n\n---\n" + "\n".join(lines)
 

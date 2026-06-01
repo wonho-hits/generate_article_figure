@@ -30,6 +30,7 @@ from app.agent.prompts.mixed_schematic import (
     retry_prompt,
 )
 from app.clients.gemini import GeminiClient
+from app.tools.arrow_clip import clip_connectors_to_icons
 from app.tools.icon_postprocess import postprocess_icon
 from app.tools.layout_review import critique_score, vision_layout_critic
 from app.tools.svg_validate import (
@@ -42,13 +43,14 @@ logger = structlog.get_logger(__name__)
 
 ProgressCallback = Callable[[str, float], None]
 
-DEFAULT_MAX_REFINE_PASSES = 2
+DEFAULT_MAX_REFINE_PASSES = 3
 """Vision-critic + backbone-regen cycles after the initial assembly.
 
 0 = no critic (fastest). Each pass re-lays-out the VECTOR BACKBONE only — the
 refine prompt freezes data-desc strings, so the icon cache hits and icons are
 NOT regenerated (no extra image-gen cost, no style drift). Cost per pass ≈ one
-backbone text-gen + one vision-critic call. Default 2 mirrors Path A.
+backbone text-gen + one vision-critic call. Default 3 gives the strict
+professor-level critic room to converge; keep-best backstops if it doesn't.
 """
 
 _GEN_ICON_CLASS = "gen-icon"
@@ -262,6 +264,11 @@ async def _assemble_mixed(prompt: str, client: GeminiClient) -> str:
         filled += 1
 
     logger.info("path_d.icons_filled", filled=filled, total=len(placeholders))
+
+    # Deterministic pass: connectors drawn center-to-center now have endpoints
+    # buried inside the filled icon boxes. Clip them to the icon boundaries so
+    # arrow tails/heads sit just outside the artwork (no LLM, no variance).
+    clip_connectors_to_icons(root)
 
     merged = ET.tostring(root, encoding="unicode")
     return validate_and_canonicalize(merged, allow_data_image=True)
