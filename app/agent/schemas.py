@@ -28,7 +28,7 @@ class RoutingDecision(BaseModel):
     """Structured output from the router LLM."""
 
     path: RoutingPath
-    reason: str = Field(..., min_length=1, max_length=200)
+    reason: str = Field(..., min_length=1)
 
 
 class GenerateResult(BaseModel):

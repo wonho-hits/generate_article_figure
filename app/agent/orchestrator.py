@@ -211,8 +211,8 @@ class Orchestrator:
         # auto and vector both run the router
         decision = await self._router.decide(prompt)
         # vector mode forbids any path with raster content (C raster, D mixed);
-        # degrade to pure-vector A. The reason field is capped at 200 chars, so
-        # truncate the embedded router reason before wrapping.
+        # degrade to pure-vector A. Keep the wrapped reason concise for
+        # display/logging by truncating the embedded router reason to ~200 chars.
         if figure_kind == "vector" and decision.path in ("C", "D"):
             wrapper = f"vector forced; router→{decision.path} ("
             suffix = ") → fallback A"
