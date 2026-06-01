@@ -18,6 +18,7 @@ from __future__ import annotations
 import asyncio
 import base64
 import hashlib
+import math
 from typing import Callable
 from xml.etree import ElementTree as ET
 
@@ -32,6 +33,7 @@ from app.agent.prompts.mixed_schematic import (
 from app.clients.gemini import GeminiClient
 from app.tools.arrow_clip import clip_connectors_to_icons
 from app.tools.icon_postprocess import postprocess_icon
+from app.tools.label_declutter import declutter_labels
 from app.tools.layout_review import critique_score, vision_layout_critic
 from app.tools.svg_validate import (
     SVG_NS,
@@ -80,20 +82,51 @@ def _find_gen_icons(root: ET.Element) -> list[ET.Element]:
     ]
 
 
-def _fit_box(
-    bx: float, by: float, bw: float, bh: float, aspect: float
-) -> tuple[float, float, float, float]:
-    """Fit an icon of the given aspect inside box (bx,by,bw,bh), centered.
+ICON_AREA_FILL = 0.78
+"""Fraction of a placeholder box's area a fitted icon should occupy.
 
-    Returns (x, y, w, h) preserving aspect (no stretch).
+Sizing by AREA (not longest-side) is what makes a set of icons look balanced:
+equal-size boxes → equal icon area regardless of each icon's aspect ratio, so a
+wide/flat icon no longer reads as 'tiny' next to a square one.
+"""
+
+ICON_MAX_OVERFLOW = 1.18
+"""How far an icon may exceed its reserved box (per dimension) to hit the target
+area. Lets wide/flat icons stay visually present instead of being shrunk into
+slivers; the box has built-in inter-group clearance (≥30px) to absorb it."""
+
+
+def _fit_box(
+    bx: float,
+    by: float,
+    bw: float,
+    bh: float,
+    aspect: float,
+    *,
+    area_fill: float = ICON_AREA_FILL,
+    max_overflow: float = ICON_MAX_OVERFLOW,
+) -> tuple[float, float, float, float]:
+    """Size an icon of the given aspect to a consistent VISUAL AREA inside box
+    (bx,by,bw,bh), centered. Aspect preserved (no stretch).
+
+    Equal-size boxes yield equal icon area, so icons of differing aspect read as
+    balanced. Width/height may modestly exceed the box (up to `max_overflow`) so
+    flat icons aren't reduced to slivers; extreme aspects clamp to the overflow
+    cap rather than blowing up. Returns (x, y, w, h).
     """
-    box_aspect = bw / bh if bh else 1.0
-    if aspect > box_aspect:
-        w = bw
-        h = bw / aspect
-    else:
-        h = bh
-        w = bh * aspect
+    target_area = bw * bh * area_fill
+    h = math.sqrt(target_area / aspect) if aspect > 0 else bh
+    w = h * aspect
+
+    max_w = bw * max_overflow
+    max_h = bh * max_overflow
+    if w > max_w:
+        w = max_w
+        h = w / aspect
+    if h > max_h:
+        h = max_h
+        w = h * aspect
+
     x = bx + (bw - w) / 2
     y = by + (bh - h) / 2
     return x, y, w, h
@@ -265,10 +298,12 @@ async def _assemble_mixed(prompt: str, client: GeminiClient) -> str:
 
     logger.info("path_d.icons_filled", filled=filled, total=len(placeholders))
 
-    # Deterministic pass: connectors drawn center-to-center now have endpoints
-    # buried inside the filled icon boxes. Clip them to the icon boundaries so
-    # arrow tails/heads sit just outside the artwork (no LLM, no variance).
+    # Deterministic passes (no LLM, no variance):
+    #  1. clip connectors to icon boundaries (tails/heads not buried in icons).
+    #  2. nudge labels off any connector / icon they overlap.
+    # Order matters: declutter reads the already-clipped connector geometry.
     clip_connectors_to_icons(root)
+    declutter_labels(root)
 
     merged = ET.tostring(root, encoding="unicode")
     return validate_and_canonicalize(merged, allow_data_image=True)
