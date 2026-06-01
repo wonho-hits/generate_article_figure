@@ -17,6 +17,8 @@ Two hard design rules drive this prompt:
 
 from __future__ import annotations
 
+from app.agent.prompts.layout_critic import LayoutIssue
+
 SYSTEM_PROMPT = """You are a publication-figure designer for biology and chemistry papers.
 
 Turn the user's description into a clean, journal-quality SCHEMATIC FIGURE as raw SVG XML. The figure has TWO kinds of content:
@@ -81,6 +83,37 @@ FAILURE RECOVERY
 - If the request is too abstract, choose a reasonable concrete realization rather than refusing.
 - Every biological entity becomes a gen-icon placeholder; never try to draw a cell/organelle/protein from primitives.
 - Never output an empty <svg>; always produce the requested entities as placeholders plus their labels and connections."""
+
+
+def build_refine_prompt(original_request: str, issues: list[LayoutIssue]) -> str:
+    """Regeneration prompt for a Path D layout-critic pass.
+
+    Critically, it FREEZES the icons: the LLM must reuse the SAME entities with
+    the IDENTICAL `data-desc` strings and only move/resize the backbone. That
+    keeps the icon cache hitting (no re-generation, no style drift) — only the
+    vector backbone is re-laid-out.
+    """
+    lines = ["Your previous figure had these LAYOUT issues (from a visual review):"]
+    for issue in issues:
+        lines.append(f"  - [{issue.severity}] {issue.location}: {issue.problem}")
+    lines += [
+        "",
+        "Regenerate the SVG fixing EVERY issue above. Keep what was correct.",
+        "",
+        "DO NOT CHANGE THE ICONS:",
+        '  - Keep the exact same set of <rect class="gen-icon"> entities.',
+        "  - Keep each entity's data-desc string BYTE-FOR-BYTE identical to before.",
+        "  - Only adjust LAYOUT: x/y/width/height of placeholders, arrow routing,",
+        "    text label positions, viewBox size, and compartment placement.",
+        "",
+        "Common layout fixes:",
+        "  - Element/label clipped → expand the viewBox or move it inside.",
+        "  - Two labels overlapping → separate them; route arrows around labels.",
+        "  - Label on top of an icon box → move the label outside the box (≥8px gap).",
+        "  - Everything crowded on one side → spread entities across the canvas,",
+        "    use the empty regions, balance the composition.",
+    ]
+    return f"{original_request}\n\n---\n" + "\n".join(lines)
 
 
 def retry_prompt(original_prompt: str, validation_error: str) -> str:

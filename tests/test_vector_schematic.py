@@ -489,12 +489,13 @@ async def test_critic_failure_does_not_block_output() -> None:
 async def test_critic_render_failure_does_not_block_output(monkeypatch) -> None:
     """If SVG rasterization fails, skip critic and ship the unrefined SVG."""
     from app.tools.svg_render import SVGRenderError
-    import app.tools.vector_schematic as mod
+    import app.tools.layout_review as review_mod
 
     def boom(*args, **kwargs):
         raise SVGRenderError("simulated rasterization failure")
 
-    monkeypatch.setattr(mod, "rasterize_svg", boom)
+    # rasterize_svg now lives in the shared layout_review module.
+    monkeypatch.setattr(review_mod, "rasterize_svg", boom)
     client = _mock_client([GOOD_SVG], critic_responses=[])
     result = await generate_vector_schematic(
         "draw kinase", client=client, max_refine_passes=1

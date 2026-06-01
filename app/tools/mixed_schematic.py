@@ -24,9 +24,14 @@ from xml.etree import ElementTree as ET
 import structlog
 
 from app.agent.prompts.gen_icon import ICON_STYLE_PREFIX
-from app.agent.prompts.mixed_schematic import SYSTEM_PROMPT, retry_prompt
+from app.agent.prompts.mixed_schematic import (
+    SYSTEM_PROMPT,
+    build_refine_prompt,
+    retry_prompt,
+)
 from app.clients.gemini import GeminiClient
 from app.tools.icon_postprocess import postprocess_icon
+from app.tools.layout_review import critique_score, vision_layout_critic
 from app.tools.svg_validate import (
     SVG_NS,
     SVGValidationError,
@@ -36,6 +41,15 @@ from app.tools.svg_validate import (
 logger = structlog.get_logger(__name__)
 
 ProgressCallback = Callable[[str, float], None]
+
+DEFAULT_MAX_REFINE_PASSES = 2
+"""Vision-critic + backbone-regen cycles after the initial assembly.
+
+0 = no critic (fastest). Each pass re-lays-out the VECTOR BACKBONE only — the
+refine prompt freezes data-desc strings, so the icon cache hits and icons are
+NOT regenerated (no extra image-gen cost, no style drift). Cost per pass ≈ one
+backbone text-gen + one vision-critic call. Default 2 mirrors Path A.
+"""
 
 _GEN_ICON_CLASS = "gen-icon"
 _IMAGE_TAG = f"{{{SVG_NS}}}image"
@@ -117,20 +131,20 @@ async def generate_mixed_figure(
     prompt: str,
     *,
     client: GeminiClient | None = None,
+    max_refine_passes: int = DEFAULT_MAX_REFINE_PASSES,
     progress: ProgressCallback | None = None,
 ) -> str:
     """Generate a Path D figure: vector backbone + generated raster icons.
 
-    Pipeline:
-      1. Gemini emits the backbone SVG with gen-icon placeholders.
-      2. Validate/canonicalize the backbone (no <image> yet).
-      3. Generate + bg-strip an icon for each placeholder (in parallel; cached).
-      4. Replace each placeholder <rect> with a fitted <image> data URI.
-      5. Final validate with the data-URI <image> exception.
+    Assembles the figure (backbone + filled icons), then runs a vision-based
+    layout critic up to `max_refine_passes` times. If the critic is clean,
+    ships immediately. Otherwise re-lays-out the backbone with concrete
+    feedback — the refine prompt freezes data-desc strings so the icon cache
+    hits and icons are NOT regenerated. Keep-best: ships the lowest
+    severity-weighted candidate if none fully converge (a regen can score
+    worse than its predecessor).
 
-    If a single icon fails to generate, its placeholder is left untouched (an
-    empty rect — harmless) and the rest proceed. If NO placeholders are found,
-    the validated backbone is returned as plain vector.
+    `progress` is an optional `(message, fraction)` callback (no-op if None).
     """
     if not prompt or not prompt.strip():
         raise ValueError("prompt is empty")
@@ -140,20 +154,80 @@ async def generate_mixed_figure(
             progress(msg, frac)
 
     client = client or GeminiClient()
+    total_steps = 1 + max_refine_passes * 2  # initial + (critic + regen) × passes
+    step = 0
 
-    _emit("Generating backbone SVG…", 0.05)
+    def _frac() -> float:
+        return min(0.99, step / total_steps) if total_steps > 0 else 0.99
+
+    _emit("Assembling figure…", _frac())
+    svg = await _assemble_mixed(prompt, client)
+    step += 1
+
+    best_svg = svg
+    best_score: int | None = None
+
+    for pass_num in range(max_refine_passes):
+        _emit(f"Layout critic — pass {pass_num + 1}…", _frac())
+        critique = await vision_layout_critic(prompt, svg, client)
+        step += 1
+        if not critique.has_issues:
+            logger.info("path_d.critic_clean", pass_num=pass_num + 1)
+            _emit(f"Pass {pass_num + 1}: clean ✓ — shipping", 1.0)
+            return svg
+
+        score = critique_score(critique)
+        if best_score is None or score < best_score:
+            best_svg, best_score = svg, score
+        else:
+            logger.info(
+                "path_d.refine_regressed",
+                pass_num=pass_num + 1,
+                score=score,
+                best_score=best_score,
+            )
+        logger.info(
+            "path_d.refine",
+            pass_num=pass_num + 1,
+            issue_count=len(critique.issues),
+            severities=[i.severity for i in critique.issues],
+            score=score,
+        )
+        _emit(
+            f"Pass {pass_num + 1}: {len(critique.issues)} issues (score {score}) — refining layout",
+            _frac(),
+        )
+        refine = build_refine_prompt(prompt, critique.issues)
+        svg = await _assemble_mixed(refine, client)
+        step += 1
+
+    logger.info("path_d.refine_returning_best", best_score=best_score)
+    _emit(f"Done — shipping best candidate (score {best_score})", 1.0)
+    return best_svg
+
+
+async def _assemble_mixed(prompt: str, client: GeminiClient) -> str:
+    """One full Path D assembly: backbone → fill icons → validate.
+
+    1. Gemini emits the backbone SVG with gen-icon placeholders.
+    2. Validate the backbone (no <image> yet).
+    3. Generate + bg-strip an icon per placeholder (parallel; desc-cached).
+    4. Replace each placeholder <rect> with a fitted <image> data URI.
+    5. Final validate with the data-URI <image> exception.
+
+    A single icon failure leaves its placeholder untouched (harmless rect) and
+    the rest proceed. No placeholders → the validated backbone is returned as
+    plain vector.
+    """
     backbone = await _generate_and_validate_backbone(prompt, client)
 
     root = ET.fromstring(backbone)
     placeholders = _find_gen_icons(root)
     if not placeholders:
         logger.warning("path_d.no_placeholders")
-        _emit("No icons to generate — vector-only figure", 1.0)
         return backbone
 
     logger.info("path_d.placeholders", count=len(placeholders))
-    _emit(f"Generating {len(placeholders)} icons…", 0.2)
-
     descs = [el.get("data-desc") or "" for el in placeholders]
     results = await asyncio.gather(
         *(_make_icon(d, client) for d in descs),
@@ -188,13 +262,9 @@ async def generate_mixed_figure(
         filled += 1
 
     logger.info("path_d.icons_filled", filled=filled, total=len(placeholders))
-    _emit("Assembling figure…", 0.95)
 
     merged = ET.tostring(root, encoding="unicode")
-    # Final safety pass — now <image> data URIs are present and allowed.
-    final = validate_and_canonicalize(merged, allow_data_image=True)
-    _emit("Done", 1.0)
-    return final
+    return validate_and_canonicalize(merged, allow_data_image=True)
 
 
 async def _generate_and_validate_backbone(prompt: str, client: GeminiClient) -> str:

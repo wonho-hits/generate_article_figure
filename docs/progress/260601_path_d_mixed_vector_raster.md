@@ -240,8 +240,22 @@ size solved by post-process.
    solid; the next iteration is porting Path A's vision-critic refine loop to
    Path D's backbone.
 
+## Layout-critic refinement (added 2026-06-01, same day)
+
+Ported Path A's vision-critic keep-best refine loop to Path D. Extracted the
+shared critic into `app/tools/layout_review.py` (`vision_layout_critic` +
+`critique_score`); Path A now imports it too (no behaviour change, 24 Path A
+tests green). Path D's refine prompt (`prompts/mixed_schematic.build_refine_prompt`)
+FREEZES `data-desc` strings, so a regen re-lays-out only the vector backbone and
+the icon cache hits — icons are never regenerated (no extra image-gen cost, no
+style drift). Verified live: across 3 assemblies (initial + 2 regens) the icon
+cache reused every icon (0 re-generation); keep-best correctly shipped the
+score-1 initial when a regen regressed to score 5. `DEFAULT_MAX_REFINE_PASSES=2`.
+
+H63 [채택]: a vision-critic keep-best loop improves/​guards Path D layout while
+the data-desc freeze keeps icon cost flat across passes.
+
 ## Deferred (Path D follow-ups)
-- Vision-critic layout refinement for the backbone (reuse Path A's loop).
 - Router-D accuracy eval (currently conservative; primary entry is the `mixed` override).
 - UI surfacing of the mixed/PPTX raster warning (currently a structlog warning only).
 - `data-desc` tightening for ambiguous morphologies (M2 macrophage rendered spindle-ish).

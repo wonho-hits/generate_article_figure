@@ -30,16 +30,11 @@ import structlog
 # a no-op — backward-compatible with all existing callers.
 ProgressCallback = Callable[[str, float], None]
 
-from app.agent.prompts.layout_critic import (
-    VISION_CRITIC_SYSTEM,
-    LayoutCritique,
-    build_refine_prompt,
-    build_vision_critic_prompt,
-)
+from app.agent.prompts.layout_critic import build_refine_prompt
 from app.agent.prompts.vector_schematic import SYSTEM_PROMPT, retry_prompt
-from app.clients.gemini import GeminiClient, GeminiResponseError
+from app.clients.gemini import GeminiClient
 from app.domain.bio_symbols import CATALOG, SYMBOLS, build_defs_block_for
-from app.tools.svg_render import SVGRenderError, rasterize_svg
+from app.tools.layout_review import critique_score, vision_layout_critic
 from app.tools.svg_validate import SVGValidationError, validate_and_canonicalize
 
 logger = structlog.get_logger(__name__)
@@ -188,17 +183,6 @@ def inject_defs(svg_string: str) -> str:
     return svg_string[: end_idx + 1] + defs_block + svg_string[end_idx + 1 :]
 
 
-# Severity weights for the keep-best refine loop. The numbers themselves are
-# not load-bearing — what matters is the strict ordering high > medium > low
-# and that a single HIGH issue outweighs multiple LOW issues.
-_SEVERITY_WEIGHT: dict[str, int] = {"high": 4, "medium": 2, "low": 1}
-
-
-def _critique_score(critique: LayoutCritique) -> int:
-    """Sum severity-weighted issue count. Lower is better; 0 = clean."""
-    return sum(_SEVERITY_WEIGHT.get(i.severity, 1) for i in critique.issues)
-
-
 async def generate_vector_schematic(
     prompt: str,
     *,
@@ -249,14 +233,14 @@ async def generate_vector_schematic(
 
     for pass_num in range(max_refine_passes):
         _emit(f"Vision critic — pass {pass_num + 1}…", _frac())
-        critique = await _layout_critic(prompt, svg, client)
+        critique = await vision_layout_critic(prompt, svg, client)
         step += 1
         if not critique.has_issues:
             logger.info("path_a.critic_clean", pass_num=pass_num + 1)
             _emit(f"Pass {pass_num + 1}: clean ✓ — shipping", 1.0)
             return svg
 
-        score = _critique_score(critique)
+        score = critique_score(critique)
         if best_score is None or score < best_score:
             best_svg, best_score = svg, score
             _emit(
@@ -320,41 +304,3 @@ async def _generate_and_validate(prompt: str, client: GeminiClient) -> str:
         except SVGValidationError as exc2:
             logger.error("path_a.validation_failed", error=str(exc2), attempt=2)
             raise
-
-
-async def _layout_critic(
-    prompt: str, svg: str, client: GeminiClient
-) -> LayoutCritique:
-    """Vision-based layout critic.
-
-    Rasterizes the SVG locally and sends the PNG to Gemini Vision. Catches
-    spatial collisions / clipping that a text-only critic cannot see.
-
-    If rasterization fails or the LLM call errors, returns a no-issues
-    critique so the calling code ships the unrefined SVG instead of failing.
-    """
-    try:
-        png = rasterize_svg(svg, width=1600)
-    except SVGRenderError as exc:
-        logger.warning("path_a.critic_render_failed", error=str(exc))
-        return LayoutCritique(has_issues=False, issues=[])
-
-    critic_prompt = build_vision_critic_prompt(prompt)
-    try:
-        result = await client.generate_text_with_image(
-            critic_prompt,
-            png,
-            image_mime="image/png",
-            system=VISION_CRITIC_SYSTEM,
-            response_schema=LayoutCritique,
-        )
-    except GeminiResponseError as exc:
-        logger.warning("path_a.critic_failed", error=str(exc))
-        return LayoutCritique(has_issues=False, issues=[])
-
-    if not isinstance(result, LayoutCritique):
-        logger.warning(
-            "path_a.critic_wrong_type", got_type=type(result).__name__
-        )
-        return LayoutCritique(has_issues=False, issues=[])
-    return result
