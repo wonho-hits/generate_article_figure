@@ -28,6 +28,21 @@ from pathlib import Path
 BASE = "https://raw.githubusercontent.com/duerrsimon/bioicons/main/"
 OUT = Path(__file__).resolve().parent.parent / "app" / "domain" / "_bioicons_data.py"
 
+# Commercial-use guard. Only CC0 / CC BY (no ShareAlike, no NonCommercial) may
+# enter the bundle: those are the licenses that permit commercial use with at
+# most an attribution requirement. ShareAlike would force our figure output
+# under the same license (copyleft contamination); NonCommercial forbids the
+# product entirely. The bioicons repo encodes the license in the folder path
+# (e.g. `static/icons/cc-by-3.0/...`), and each Pick re-declares it; both must
+# agree and both must be on the allowlist.
+#
+# `repo_path` folder prefix -> canonical license string.
+ALLOWED_LICENSES: dict[str, str] = {
+    "static/icons/cc-0/": "CC0 1.0",
+    "static/icons/cc-by-3.0/": "CC BY 3.0",
+    "static/icons/cc-by-4.0/": "CC BY 4.0",
+}
+
 
 @dataclass(frozen=True)
 class Pick:
@@ -287,7 +302,39 @@ The result is referenced from `bio_symbols.py` and merged into the public
 '''
 
 
+def validate_licenses(picks: list[Pick]) -> None:
+    """Reject any Pick that isn't commercial-use-safe.
+
+    A Pick passes only if its `repo_path` sits under an allowlisted license
+    folder AND its declared `license` string matches that folder's canonical
+    license. Raises ValueError on the first violation so a bad icon can never
+    silently enter `_bioicons_data.py`.
+    """
+    for pick in picks:
+        matched = next(
+            (
+                canonical
+                for prefix, canonical in ALLOWED_LICENSES.items()
+                if pick.repo_path.startswith(prefix)
+            ),
+            None,
+        )
+        if matched is None:
+            raise ValueError(
+                f"{pick.slug!r}: repo_path {pick.repo_path!r} is not under an "
+                f"allowlisted license folder. Commercial use requires CC0 or "
+                f"CC BY (3.0/4.0); ShareAlike and NonCommercial are rejected. "
+                f"Allowed prefixes: {sorted(ALLOWED_LICENSES)}"
+            )
+        if pick.license != matched:
+            raise ValueError(
+                f"{pick.slug!r}: declared license {pick.license!r} disagrees "
+                f"with the {matched!r} implied by repo_path {pick.repo_path!r}."
+            )
+
+
 def main() -> None:
+    validate_licenses(PICKS)
     sanitized: dict[str, tuple[str, Pick]] = {}
     for pick in PICKS:
         raw = fetch(BASE + pick.repo_path)
