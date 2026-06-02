@@ -4,6 +4,8 @@
 
 생물·화학 **논문용 figure 생성 AI 에이전트**. 자연어 프롬프트를 편집 가능한 figure로 변환하고 SVG / PPTX / PNG로 export합니다.
 
+![Figure Studio](assets/figure-studio.png)
+
 웹앱 — **Figure Studio** — 은 두 가지 결과물을 노출하고, 내부적으로는 네 개의 렌더링 path로 라우팅합니다.
 
 | 화면 모드 | Path | 백엔드 | 적합한 figure | 출력 |

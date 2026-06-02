@@ -4,6 +4,8 @@
 
 A Bio/Chem **publication-figure AI agent**. Turns natural-language prompts into editable figures and exports to SVG / PPTX / PNG.
 
+![Figure Studio](assets/figure-studio.png)
+
 The web app — **Figure Studio** — exposes two outcomes; internally the agent routes across four rendering paths.
 
 | User-facing mode | Path(s) | Backend | Best for | Output |
