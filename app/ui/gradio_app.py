@@ -224,6 +224,16 @@ async def on_generate(
     can step through candidates afterward. Illustration (raster) is single-step.
     """
     hide = tuple(gr.update() for _ in range(6))  # 6 trailing no-ops
+    # Reset trailing widgets at the start of a run: hide the Refine panel + the
+    # candidate nav from any PREVIOUS figure, disable downloads, clear the label.
+    reset = (
+        gr.update(visible=False),       # refine_group
+        gr.update(interactive=False),   # svg_btn
+        gr.update(interactive=False),   # pptx_btn
+        gr.update(interactive=False),   # image_btn
+        gr.update(visible=False),       # nav_row
+        gr.update(value=""),            # cand_label
+    )
 
     if not prompt or not prompt.strip():
         yield (state, PLACEHOLDER_HTML, "⚠ Please enter a prompt.", EMPTY_LOG, *hide)
@@ -257,8 +267,8 @@ async def on_generate(
     last_status = "⏳ Working…"
     candidates: list[str] = []
 
-    # Initial yield so the user sees activity before the first model call returns.
-    yield (state, last_display, last_status, _format_log(log_lines), *hide)
+    # Initial yield — show activity AND clear any previous run's nav/downloads.
+    yield (state, last_display, last_status, _format_log(log_lines), *reset)
 
     while True:
         item = await queue.get()

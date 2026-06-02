@@ -84,8 +84,6 @@ uv run pytest                 # full test suite
 uv run pytest --run-live      # hits the live Gemini API (incurs cost)
 ```
 
-Dev notes and the build log live in `docs/progress/`.
-
 ## License
 
 MIT — see [LICENSE](LICENSE).

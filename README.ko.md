@@ -84,8 +84,6 @@ uv run pytest                 # 전체 테스트
 uv run pytest --run-live      # 실제 Gemini API 호출 (비용 발생)
 ```
 
-개발 노트와 빌드 로그는 `docs/progress/` 에 있습니다.
-
 ## 라이선스
 
 MIT — [LICENSE](LICENSE) 참조.
