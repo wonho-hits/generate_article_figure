@@ -7,6 +7,7 @@ or the LLM router (figure_kind=auto, the default).
 from __future__ import annotations
 
 import base64
+from typing import Callable
 
 import structlog
 
@@ -58,6 +59,7 @@ class Orchestrator:
         request: GenerateRequest,
         *,
         progress: ProgressCallback | None = None,
+        on_preview: "Callable[[str], None] | None" = None,
     ) -> GenerateResult:
         decision = await self._resolve_path(request.prompt, request.figure_kind)
         logger.info(
@@ -71,7 +73,9 @@ class Orchestrator:
         if decision.path == "B":
             return await self._dispatch_chemistry(request, decision)
         if decision.path == "D":
-            return await self._dispatch_mixed(request, decision, progress=progress)
+            return await self._dispatch_mixed(
+                request, decision, progress=progress, on_preview=on_preview
+            )
         return await self._dispatch_raster(request, decision)
 
     async def _dispatch_vector(
@@ -99,11 +103,15 @@ class Orchestrator:
         decision: RoutingDecision,
         *,
         progress: ProgressCallback | None = None,
+        on_preview: "Callable[[str], None] | None" = None,
     ) -> GenerateResult:
         """Path D: vector backbone + generated raster icons. Output is an SVG
         string (with embedded data-URI <image> regions), so kind='svg'."""
         svg = await generate_mixed_figure(
-            request.prompt, client=self._client, progress=progress
+            request.prompt,
+            client=self._client,
+            progress=progress,
+            on_preview=on_preview,
         )
         entry = await self._sessions.create()
         await self._sessions.update(entry.session_id, svg)

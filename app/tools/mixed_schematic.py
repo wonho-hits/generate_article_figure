@@ -168,6 +168,7 @@ async def generate_mixed_figure(
     client: GeminiClient | None = None,
     max_refine_passes: int = DEFAULT_MAX_REFINE_PASSES,
     progress: ProgressCallback | None = None,
+    on_preview: "Callable[[str], None] | None" = None,
 ) -> str:
     """Generate a Path D figure: vector backbone + generated raster icons.
 
@@ -180,6 +181,8 @@ async def generate_mixed_figure(
     worse than its predecessor).
 
     `progress` is an optional `(message, fraction)` callback (no-op if None).
+    `on_preview` is an optional `(svg)` callback fired with each assembled
+    candidate, so a UI can show the figure improving across critic passes.
     """
     if not prompt or not prompt.strip():
         raise ValueError("prompt is empty")
@@ -187,6 +190,10 @@ async def generate_mixed_figure(
     def _emit(msg: str, frac: float) -> None:
         if progress is not None:
             progress(msg, frac)
+
+    def _preview(svg: str) -> None:
+        if on_preview is not None:
+            on_preview(svg)
 
     client = client or GeminiClient()
     total_steps = 1 + max_refine_passes * 2  # initial + (critic + regen) × passes
@@ -198,6 +205,8 @@ async def generate_mixed_figure(
     _emit("Assembling figure…", _frac())
     svg = await _assemble_mixed(prompt, client)
     step += 1
+    _emit("Draft ready — reviewing…", _frac())
+    _preview(svg)
 
     best_svg = svg
     best_score: int | None = None
@@ -209,6 +218,7 @@ async def generate_mixed_figure(
         if not critique.has_issues:
             logger.info("path_d.critic_clean", pass_num=pass_num + 1)
             _emit(f"Pass {pass_num + 1}: clean ✓ — shipping", 1.0)
+            _preview(svg)
             return svg
 
         score = critique_score(critique)
@@ -235,9 +245,12 @@ async def generate_mixed_figure(
         refine = build_refine_prompt(prompt, critique.issues)
         svg = await _assemble_mixed(refine, client)
         step += 1
+        _emit(f"Pass {pass_num + 1} refined", _frac())
+        _preview(svg)
 
     logger.info("path_d.refine_returning_best", best_score=best_score)
     _emit(f"Done — shipping best candidate (score {best_score})", 1.0)
+    _preview(best_svg)
     return best_svg
 
 
