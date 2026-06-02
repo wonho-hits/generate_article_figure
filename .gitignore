@@ -57,3 +57,6 @@ artifacts/
 
 # uv: keep uv.lock committed (deterministic installs); ignore download cache
 .uv-cache/
+
+# Private project work-note (not for the public repo)
+CLAUDE.md
