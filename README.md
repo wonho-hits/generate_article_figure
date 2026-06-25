@@ -18,7 +18,7 @@ Describe a pathway, a mechanism, or a cell. Get a clean, editable figure you can
 
 Type what you want. Pick a style. Download.
 
-| | |
+| Type | Description |
 |---|---|
 | 🎨 **Illustration** | A full, styled artwork — BioRender-style cells, anatomy, scenes. Refine it by just describing the change. |
 | 📊 **Vector** | A clean, labeled schematic — pathways, cascades, mechanisms. Crisp arrows, balanced icons, editable in PowerPoint. |
